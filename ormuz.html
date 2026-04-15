@@ -1,0 +1,263 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+  .container { padding: 1.5rem 1rem; max-width: 700px; margin: 0 auto; }
+  .header { text-align: center; margin-bottom: 2rem; }
+  .header h1 { font-size: 22px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; }
+  .header .subtitle { font-size: 13px; color: var(--color-text-secondary); }
+  .status-banner { border-radius: var(--border-radius-lg); padding: 1.25rem; text-align: center; margin-bottom: 1.5rem; border: 0.5px solid; transition: all 0.6s ease; }
+  .status-banner.open { background: #EAF3DE; border-color: #3B6D11; }
+  .status-banner.closed { background: #FCEBEB; border-color: #A32D2D; }
+  .status-banner.suspicious { background: #FAEEDA; border-color: #854F0B; }
+  .status-label { font-size: 28px; font-weight: 500; margin-bottom: 4px; transition: all 0.4s; }
+  .status-banner.open .status-label { color: #27500A; }
+  .status-banner.closed .status-label { color: #791F1F; }
+  .status-banner.suspicious .status-label { color: #633806; }
+  .status-reason { font-size: 13px; transition: all 0.4s; }
+  .status-banner.open .status-reason { color: #3B6D11; }
+  .status-banner.closed .status-reason { color: #A32D2D; }
+  .status-banner.suspicious .status-reason { color: #854F0B; }
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+  .metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.85rem; }
+  .metric-label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px; }
+  .metric-value { font-size: 18px; font-weight: 500; color: var(--color-text-primary); }
+  .metric-note { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
+  .log-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; margin-bottom: 1.5rem; }
+  .log-header { padding: 0.75rem 1rem; border-bottom: 0.5px solid var(--color-border-tertiary); font-size: 13px; font-weight: 500; color: var(--color-text-secondary); display: flex; justify-content: space-between; align-items: center; }
+  .log-entry { padding: 0.65rem 1rem; border-bottom: 0.5px solid var(--color-border-tertiary); display: flex; gap: 12px; align-items: flex-start; font-size: 13px; }
+  .log-entry:last-child { border-bottom: none; }
+  .log-time { color: var(--color-text-tertiary); min-width: 52px; font-size: 12px; font-variant-numeric: tabular-nums; padding-top: 1px; }
+  .log-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+  .dot-open { background: #639922; }
+  .dot-closed { background: #E24B4A; }
+  .dot-warn { background: #EF9F27; }
+  .dot-info { background: #378ADD; }
+  .log-text { color: var(--color-text-primary); line-height: 1.5; }
+  .log-text .tag { font-size: 11px; padding: 1px 7px; border-radius: 99px; margin-left: 6px; font-weight: 500; }
+  .tag-open { background: #C0DD97; color: #27500A; }
+  .tag-closed { background: #F7C1C1; color: #791F1F; }
+  .tag-warn { background: #FAC775; color: #633806; }
+  .oil-ticker { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; font-size: 13px; color: var(--color-text-secondary); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+  .oil-price { font-size: 18px; font-weight: 500; color: var(--color-text-primary); }
+  .oil-change { font-size: 12px; padding: 2px 8px; border-radius: 99px; }
+  .oil-up { background: #FCEBEB; color: #A32D2D; }
+  .oil-down { background: #EAF3DE; color: #3B6D11; }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 0.5rem; }
+  .btn-row button { font-size: 12px; padding: 6px 14px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; color: var(--color-text-secondary); cursor: pointer; transition: background 0.15s; }
+  .btn-row button:hover { background: var(--color-background-secondary); }
+  .disclaimer { font-size: 11px; color: var(--color-text-tertiary); text-align: center; margin-top: 1rem; line-height: 1.5; }
+</style>
+
+<div class="container">
+  <h2 class="sr-only">Dashboard humorístico do estado operacional do Estreito de Ormuz</h2>
+
+  <div class="header">
+    <h1>Estreito de Ormuz — Painel Operacional</h1>
+    <div class="subtitle">Actualizado em tempo real • Fuso horário: Teerão (onde ninguém dorme)</div>
+  </div>
+
+  <div class="status-banner open" id="statusBanner">
+    <div class="status-label" id="statusLabel">ABERTO</div>
+    <div class="status-reason" id="statusReason">Tecnicamente. Por enquanto. Não perguntes porquê.</div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-label">Hora de abertura hoje</div>
+      <div class="metric-value" id="openTime">05:14</div>
+      <div class="metric-note">Após longa reunião</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Hora de fecho prevista</div>
+      <div class="metric-value" id="closeTime">22:47</div>
+      <div class="metric-note">Sujeito a humor</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Navios à espera</div>
+      <div class="metric-value" id="shipsWaiting">23</div>
+      <div class="metric-note">Alguns já pagaram propina</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Ameaças hoje</div>
+      <div class="metric-value" id="threatCount">7</div>
+      <div class="metric-note">Nível: quarta-feira normal</div>
+    </div>
+  </div>
+
+  <div class="oil-ticker">
+    <span>Petróleo Brent (por barril)</span>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span class="oil-price" id="oilPrice">$94.30</span>
+      <span class="oil-change oil-up" id="oilChange">+4.7%</span>
+    </div>
+    <span style="font-size:12px" id="oilNote">Subiu assim que o Irão bocejou</span>
+  </div>
+
+  <div class="log-card">
+    <div class="log-header">
+      <span>Registo de eventos</span>
+      <span id="logCount" style="font-weight:400; color: var(--color-text-tertiary);">8 entradas</span>
+    </div>
+    <div id="logEntries"></div>
+  </div>
+
+  <div class="btn-row">
+    <button onclick="simulateEvent('close')">Fechar estreito</button>
+    <button onclick="simulateEvent('open')">Abrir estreito</button>
+    <button onclick="simulateEvent('suspicious')">Atividade suspeita</button>
+    <button onclick="simulateEvent('negotiate')">Negociar</button>
+  </div>
+
+  <div class="disclaimer">
+    Este painel é fictício e humorístico. Nenhum embargo foi criado durante a produção deste dashboard.<br>
+    O autor não se responsabiliza por aumentos no preço do combustível.
+  </div>
+</div>
+
+<script>
+const logs = [
+  { time: "03:12", type: "warn", text: "General diz que vai 'considerar opções'. Mercados entram em pânico preventivo." },
+  { time: "04:58", text: "Reunião de 6 horas conclui que o estreito está... igual.", type: "info" },
+  { time: "05:14", text: "Estreito aberto", type: "open", tag: "ABERTO" },
+  { time: "07:30", text: "Porta-voz iraniano usa a palavra 'soberania' 14 vezes numa frase.", type: "warn" },
+  { time: "09:02", text: "EUA enviam porta-aviões. Irão diz que não está impressionado. Bolsas sobem e descem ao mesmo tempo.", type: "info" },
+  { time: "11:15", text: "Navio-tanque pede passagem. Recebe formulário em persa com 43 páginas.", type: "warn" },
+  { time: "13:44", text: "Fecho temporário por 'manutenção geopolítica'", type: "closed", tag: "FECHADO" },
+  { time: "14:09", text: "Estreito reaberto após telefonema misterioso", type: "open", tag: "ABERTO" },
+];
+
+const funnyReasons = {
+  open: [
+    "Tecnicamente. Por enquanto. Não perguntes porquê.",
+    "Aberto, mas com energia de 'fecha quando eu quiser'.",
+    "Funcional. O general está a almoçar.",
+    "Passagem permitida. Sujeito a revisão a qualquer hora.",
+  ],
+  closed: [
+    "Fechado por razões que serão explicadas num discurso de 3 horas.",
+    "Em manutenção. Volte em... não sabemos.",
+    "Temporariamente encerrado. Ou permanentemente. TBD.",
+    "Fechado. O petróleo foi para outro sítio.",
+  ],
+  suspicious: [
+    "Alguém está a filmar. Situação tensa.",
+    "Drone não identificado. Toda a gente aponta dedos.",
+    "Reunião de emergência em curso. Resultado: nova reunião.",
+    "Estado: complicado. Como o relacionamento do Irão com o SWIFT.",
+  ]
+};
+
+const eventMessages = {
+  close: [
+    "Estreito fechado — razão oficial: 'provocação ocidental não especificada'",
+    "Fecho anunciado em direto. CNN em pausa de publicidade.",
+    "Estreito encerrado. Alguém em Riade engasgou-se com o café.",
+  ],
+  open: [
+    "Estreito reaberto após 'reflexão estratégica profunda'",
+    "Reabertura confirmada. Talvez.",
+    "Aberto novamente. O general achou que estava a aparecer bem.",
+  ],
+  suspicious: [
+    "Helicóptero não identificado. Tripulantes a agitar bandeiras brancas.",
+    "Submarino detectado. Todos fingem que não viram.",
+    "Ruído estranho no sonar. Provavelmente um golfinho com agenda política.",
+  ],
+  negotiate: [
+    "Negociação iniciada. Petróleo desce $2. Todos felizes por 40 minutos.",
+    "Diplomata envia e-mail com 12 anexos em PDF. Irão responde com fax.",
+    "EUA oferecem 'pacote de incentivos'. Irão pede para ver ementa completa.",
+  ]
+};
+
+const dotClass = { open: "dot-open", closed: "dot-closed", warn: "dot-warn", info: "dot-info", suspicious: "dot-warn" };
+
+function renderLogs() {
+  const container = document.getElementById("logEntries");
+  container.innerHTML = "";
+  [...logs].reverse().forEach(log => {
+    const div = document.createElement("div");
+    div.className = "log-entry";
+    div.innerHTML = `
+      <span class="log-time">${log.time}</span>
+      <span class="log-dot ${dotClass[log.type] || 'dot-info'}"></span>
+      <span class="log-text">${log.text}${log.tag ? `<span class="tag ${log.tag === 'ABERTO' ? 'tag-open' : 'tag-closed'}">${log.tag}</span>` : ""}</span>
+    `;
+    container.appendChild(div);
+  });
+  document.getElementById("logCount").textContent = logs.length + " entradas";
+}
+
+function getNow() {
+  const d = new Date();
+  return d.getHours().toString().padStart(2,"0") + ":" + d.getMinutes().toString().padStart(2,"0");
+}
+
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+function updateStatus(type) {
+  const banner = document.getElementById("statusBanner");
+  const label = document.getElementById("statusLabel");
+  const reason = document.getElementById("statusReason");
+  banner.className = "status-banner " + type;
+  if (type === "open") { label.textContent = "ABERTO"; }
+  else if (type === "closed") { label.textContent = "FECHADO"; }
+  else { label.textContent = "SUSPEITO"; }
+  reason.textContent = pick(funnyReasons[type] || funnyReasons.open);
+}
+
+function simulateEvent(type) {
+  const msg = pick(eventMessages[type]);
+  const logType = type === "close" ? "closed" : type === "open" ? "open" : type === "suspicious" ? "warn" : "info";
+  const entry = { time: getNow(), type: logType, text: msg };
+  if (type === "close") { entry.tag = "FECHADO"; updateStatus("closed"); }
+  else if (type === "open") { entry.tag = "ABERTO"; updateStatus("open"); }
+  else if (type === "suspicious") updateStatus("suspicious");
+  logs.push(entry);
+  renderLogs();
+  randomizeMetrics(type);
+}
+
+function randomizeMetrics(event) {
+  const ships = parseInt(document.getElementById("shipsWaiting").textContent);
+  const threats = parseInt(document.getElementById("threatCount").textContent);
+  if (event === "close") {
+    document.getElementById("shipsWaiting").textContent = ships + Math.floor(Math.random() * 8 + 3);
+    document.getElementById("threatCount").textContent = threats + Math.floor(Math.random() * 3 + 1);
+    const price = (94 + Math.random() * 12).toFixed(2);
+    document.getElementById("oilPrice").textContent = "$" + price;
+    const pct = (Math.random() * 8 + 3).toFixed(1);
+    document.getElementById("oilChange").textContent = "+" + pct + "%";
+    document.getElementById("oilChange").className = "oil-change oil-up";
+    document.getElementById("oilNote").textContent = pick(["Petróleo entrou em hiperventilação", "Traders acordaram a suar frio", "Investidores em pânico. Novidade."]);
+  } else if (event === "open") {
+    document.getElementById("shipsWaiting").textContent = Math.max(0, ships - Math.floor(Math.random() * 5 + 2));
+    const price = (82 + Math.random() * 8).toFixed(2);
+    document.getElementById("oilPrice").textContent = "$" + price;
+    const pct = (Math.random() * 4 + 1).toFixed(1);
+    document.getElementById("oilChange").textContent = "-" + pct + "%";
+    document.getElementById("oilChange").className = "oil-change oil-down";
+    document.getElementById("oilNote").textContent = pick(["Traders respiram. Por enquanto.", "Mercado aliviado, mas desconfiante.", "Calma tensa. A pior calma."]);
+  } else {
+    document.getElementById("threatCount").textContent = threats + 1;
+  }
+  const hOpen = (Math.floor(Math.random() * 6 + 3)).toString().padStart(2,"0") + ":" + Math.floor(Math.random() * 60).toString().padStart(2,"0");
+  const hClose = (Math.floor(Math.random() * 4 + 20)).toString().padStart(2,"0") + ":" + Math.floor(Math.random() * 60).toString().padStart(2,"0");
+  document.getElementById("openTime").textContent = hOpen;
+  document.getElementById("closeTime").textContent = hClose;
+}
+
+setInterval(() => {
+  const quotes = [
+    "Subiu assim que o Irão bocejou",
+    "Mercados reagem a respiração de diplomata",
+    "Alta por 'instabilidade genérica da região'",
+    "Desceu. Alguém sorriu em Teerão.",
+    "Petróleo nervoso. Como sempre.",
+  ];
+  document.getElementById("oilNote").textContent = pick(quotes);
+}, 7000);
+
+renderLogs();
+</script>
