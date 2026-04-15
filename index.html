@@ -31,7 +31,6 @@
       --amber-border: rgba(232,160,32,0.25);
       --blue: #4090e8;
       --blue-bg: rgba(64,144,232,0.08);
-      --accent: #e8a020;
       --font-display: 'Bebas Neue', sans-serif;
       --font-mono: 'IBM Plex Mono', monospace;
       --font-body: 'IBM Plex Sans', sans-serif;
@@ -47,29 +46,18 @@
       overflow-x: hidden;
     }
 
-    /* scanline overlay */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0,0,0,0.03) 2px,
-        rgba(0,0,0,0.03) 4px
-      );
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
       pointer-events: none;
       z-index: 999;
     }
 
-    .sr-only {
-      position: absolute; width: 1px; height: 1px;
-      padding: 0; margin: -1px; overflow: hidden;
-      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
-    }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
-    /* ---- HEADER ---- */
+    /* HEADER */
     header {
       border-bottom: 1px solid var(--border);
       padding: 1.25rem 1.5rem;
@@ -106,11 +94,7 @@
 
     .header-title span { color: var(--amber); }
 
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
+    .header-right { display: flex; align-items: center; gap: 16px; }
 
     .live-badge {
       display: flex; align-items: center; gap: 6px;
@@ -127,26 +111,17 @@
       animation: pulse 1.6s ease-in-out infinite;
     }
 
-    .clock {
-      font-family: var(--font-mono);
-      font-size: 13px;
-      color: var(--text-muted);
-      letter-spacing: 0.05em;
-    }
+    .clock { font-family: var(--font-mono); font-size: 13px; color: var(--text-muted); letter-spacing: 0.05em; }
 
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.4; transform: scale(0.8); }
     }
 
-    /* ---- MAIN LAYOUT ---- */
-    main {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 1.5rem 1rem 4rem;
-    }
+    /* MAIN */
+    main { max-width: 900px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
 
-    /* ---- STATUS BANNER ---- */
+    /* STATUS BANNER */
     .status-banner {
       border: 1px solid;
       border-radius: 4px;
@@ -170,7 +145,7 @@
       transition: background 0.5s;
     }
 
-    .status-banner.open { background: var(--green-bg); border-color: var(--green-border); }
+    .status-banner.open   { background: var(--green-bg); border-color: var(--green-border); }
     .status-banner.open::after { background: var(--green); }
     .status-banner.closed { background: var(--red-bg); border-color: var(--red-border); }
     .status-banner.closed::after { background: var(--red); }
@@ -179,13 +154,7 @@
 
     .status-left { padding-left: 12px; }
 
-    .status-tag {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: 0.15em;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
+    .status-tag { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em; color: var(--text-muted); margin-bottom: 6px; }
 
     .status-label {
       font-family: var(--font-display);
@@ -196,51 +165,19 @@
       transition: color 0.5s;
     }
 
-    .status-banner.open .status-label { color: var(--green); }
-    .status-banner.closed .status-label { color: var(--red); }
+    .status-banner.open .status-label       { color: var(--green); }
+    .status-banner.closed .status-label     { color: var(--red); }
     .status-banner.suspicious .status-label { color: var(--amber); }
 
-    .status-reason {
-      font-size: 13px;
-      color: var(--text-muted);
-      max-width: 420px;
-      line-height: 1.5;
-    }
+    .status-reason { font-size: 13px; color: var(--text-muted); max-width: 420px; line-height: 1.5; }
 
-    .status-right {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 6px;
-    }
+    .status-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
 
-    .status-times {
-      text-align: right;
-    }
+    .time-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .time-row-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; color: var(--text-dim); text-transform: uppercase; }
+    .time-row-val { font-family: var(--font-display); font-size: 20px; letter-spacing: 0.05em; color: var(--text); }
 
-    .time-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 4px;
-    }
-
-    .time-row-label {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      color: var(--text-dim);
-      text-transform: uppercase;
-    }
-
-    .time-row-val {
-      font-family: var(--font-display);
-      font-size: 20px;
-      letter-spacing: 0.05em;
-      color: var(--text);
-    }
-
-    /* ---- METRICS GRID ---- */
+    /* METRICS */
     .metrics {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -248,37 +185,12 @@
       margin-bottom: 1.5rem;
     }
 
-    .metric {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 1rem;
-    }
+    .metric { background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 1rem; }
+    .metric-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; }
+    .metric-value { font-family: var(--font-display); font-size: 32px; letter-spacing: 0.03em; color: var(--text); line-height: 1; margin-bottom: 4px; }
+    .metric-note { font-size: 11px; color: var(--text-muted); }
 
-    .metric-label {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-
-    .metric-value {
-      font-family: var(--font-display);
-      font-size: 32px;
-      letter-spacing: 0.03em;
-      color: var(--text);
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-
-    .metric-note {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    /* ---- OIL TICKER ---- */
+    /* OIL TICKER */
     .oil-ticker {
       background: var(--bg3);
       border: 1px solid var(--border);
@@ -292,75 +204,101 @@
       margin-bottom: 1.5rem;
     }
 
-    .oil-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .oil-left { display: flex; align-items: center; gap: 10px; }
+    .oil-icon { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; color: var(--text-dim); text-transform: uppercase; }
+    .oil-price { font-family: var(--font-display); font-size: 28px; letter-spacing: 0.05em; color: var(--text); }
 
-    .oil-icon {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      color: var(--text-dim);
-      text-transform: uppercase;
-    }
-
-    .oil-price {
-      font-family: var(--font-display);
-      font-size: 28px;
-      letter-spacing: 0.05em;
-      color: var(--text);
-    }
-
-    .oil-badge {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 2px;
-      font-weight: 500;
-    }
-
-    .oil-badge.up { background: rgba(232,64,64,0.15); color: var(--red); border: 1px solid var(--red-border); }
+    .oil-badge { font-family: var(--font-mono); font-size: 11px; padding: 3px 8px; border-radius: 2px; font-weight: 500; }
+    .oil-badge.up   { background: rgba(232,64,64,0.15); color: var(--red); border: 1px solid var(--red-border); }
     .oil-badge.down { background: rgba(111,207,74,0.12); color: var(--green); border: 1px solid var(--green-border); }
 
-    .oil-note {
-      font-size: 12px;
-      color: var(--text-muted);
-      font-style: italic;
-    }
+    .oil-note { font-size: 12px; color: var(--text-muted); font-style: italic; }
 
-    /* ---- LOG ---- */
-    .log-section {
-      margin-bottom: 1.5rem;
-    }
+    /* LOG SECTION */
+    .log-section { margin-bottom: 1.5rem; }
 
     .section-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
       margin-bottom: 10px;
     }
 
-    .section-title {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 0.15em;
-      color: var(--text-dim);
-      text-transform: uppercase;
+    .section-title { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.15em; color: var(--text-dim); text-transform: uppercase; }
+    .log-count { font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); }
+
+    /* LOG FILTERS */
+    .log-filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+      align-items: center;
     }
 
-    .log-count {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-dim);
-    }
-
-    .log-list {
+    .filter-input {
       background: var(--bg2);
+      border: 1px solid var(--border-strong);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 3px;
+      outline: none;
+      transition: border-color 0.15s;
+      min-width: 0;
+    }
+
+    .filter-input:focus { border-color: var(--amber); }
+    .filter-input::placeholder { color: var(--text-dim); }
+
+    input[type="date"].filter-input::-webkit-calendar-picker-indicator {
+      filter: invert(0.4);
+      cursor: pointer;
+    }
+
+    .filter-select {
+      background: var(--bg2);
+      border: 1px solid var(--border-strong);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 3px;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+
+    .filter-select:focus { border-color: var(--amber); }
+    .filter-select option { background: #1a1a17; }
+
+    .filter-clear {
+      background: transparent;
       border: 1px solid var(--border);
-      border-radius: 4px;
-      overflow: hidden;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .filter-clear:hover { border-color: var(--border-strong); color: var(--text-muted); }
+
+    /* LOG LIST */
+    .log-list { background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+
+    .log-empty {
+      padding: 2rem;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-dim);
     }
 
     .log-entry {
@@ -369,41 +307,36 @@
       gap: 12px;
       padding: 0.7rem 1rem;
       border-bottom: 1px solid var(--border);
-      animation: fadeIn 0.4s ease;
+      animation: fadeIn 0.3s ease;
     }
 
     .log-entry:last-child { border-bottom: none; }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-6px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(-4px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
-    .log-time {
+    .log-datetime {
       font-family: var(--font-mono);
       font-size: 11px;
       color: var(--text-dim);
-      min-width: 48px;
+      min-width: 120px;
       padding-top: 2px;
-    }
-
-    .log-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      margin-top: 5px;
+      line-height: 1.5;
       flex-shrink: 0;
     }
 
-    .dot-open { background: var(--green); }
-    .dot-closed { background: var(--red); }
-    .dot-warn { background: var(--amber); }
-    .dot-info { background: var(--blue); }
+    .log-datetime .log-date { display: block; font-size: 10px; color: var(--text-dim); opacity: 0.6; }
+    .log-datetime .log-time { display: block; }
 
-    .log-text {
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
+    .log-dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+    .dot-open   { background: var(--green); }
+    .dot-closed { background: var(--red); }
+    .dot-warn   { background: var(--amber); }
+    .dot-info   { background: var(--blue); }
+
+    .log-text { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
 
     .log-tag {
       display: inline-block;
@@ -416,28 +349,50 @@
       vertical-align: middle;
     }
 
-    .tag-open { background: rgba(111,207,74,0.12); color: var(--green); border: 1px solid var(--green-border); }
-    .tag-closed { background: rgba(232,64,64,0.12); color: var(--red); border: 1px solid var(--red-border); }
+    .tag-open   { background: rgba(111,207,74,0.12); color: var(--green); border: 1px solid var(--green-border); }
+    .tag-closed { background: rgba(232,64,64,0.12);  color: var(--red);   border: 1px solid var(--red-border); }
 
-    /* ---- CONTROLS ---- */
-    .controls {
-      margin-bottom: 1.5rem;
+    /* PAGINATION */
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
     }
 
-    .controls-label {
+    .pagination-info {
       font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: 0.15em;
+      font-size: 11px;
       color: var(--text-dim);
-      text-transform: uppercase;
-      margin-bottom: 10px;
     }
 
-    .btn-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 8px;
+    .pagination-btns { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+
+    .page-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 5px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.15s;
+      min-width: 32px;
+      text-align: center;
     }
+
+    .page-btn:hover:not(:disabled) { border-color: var(--border-strong); color: var(--text-muted); }
+    .page-btn.active { border-color: var(--amber); color: var(--amber); }
+    .page-btn:disabled { opacity: 0.3; cursor: default; }
+
+    /* CONTROLS */
+    .controls { margin-bottom: 1.5rem; }
+    .controls-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em; color: var(--text-dim); text-transform: uppercase; margin-bottom: 10px; }
+
+    .btn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
 
     .btn {
       background: transparent;
@@ -456,31 +411,23 @@
       gap: 8px;
     }
 
-    .btn:hover { background: var(--bg3); color: var(--text); border-color: var(--border-strong); }
+    .btn:hover  { background: var(--bg3); color: var(--text); }
     .btn:active { transform: scale(0.98); }
 
-    .btn-indicator {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
+    .btn-indicator { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 
-    .btn.btn-close .btn-indicator { background: var(--red); }
-    .btn.btn-open .btn-indicator { background: var(--green); }
+    .btn.btn-close      .btn-indicator { background: var(--red); }
+    .btn.btn-open       .btn-indicator { background: var(--green); }
     .btn.btn-suspicious .btn-indicator { background: var(--amber); }
-    .btn.btn-negotiate .btn-indicator { background: var(--blue); }
+    .btn.btn-negotiate  .btn-indicator { background: var(--blue); }
 
-    .btn.btn-close:hover { border-color: var(--red-border); color: var(--red); }
-    .btn.btn-open:hover { border-color: var(--green-border); color: var(--green); }
-    .btn.btn-suspicious:hover { border-color: var(--amber-border); color: var(--amber); }
-    .btn.btn-negotiate:hover { border-color: rgba(64,144,232,0.3); color: var(--blue); }
+    .btn.btn-close:hover      { border-color: var(--red-border);              color: var(--red); }
+    .btn.btn-open:hover       { border-color: var(--green-border);            color: var(--green); }
+    .btn.btn-suspicious:hover { border-color: var(--amber-border);            color: var(--amber); }
+    .btn.btn-negotiate:hover  { border-color: rgba(64,144,232,0.3);           color: var(--blue); }
 
-    /* ---- FOOTER ---- */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 1.5rem 1rem;
-      text-align: center;
-    }
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 1.5rem 1rem; text-align: center; }
 
     .footer-text {
       font-family: var(--font-mono);
@@ -490,16 +437,10 @@
       letter-spacing: 0.04em;
     }
 
-    .footer-text a {
-      color: var(--text-muted);
-      text-decoration: none;
-      border-bottom: 1px solid var(--border);
-    }
-
-    /* ---- RESPONSIVE ---- */
     @media (max-width: 480px) {
       .status-right { align-items: flex-start; }
       header { padding: 1rem; }
+      .log-datetime { min-width: 90px; }
     }
   </style>
 </head>
@@ -580,29 +521,53 @@
   <div class="log-section">
     <div class="section-header">
       <div class="section-title">Registo de eventos</div>
-      <div class="log-count" id="logCount">8 entradas</div>
+      <div class="log-count" id="logCount">—</div>
     </div>
+
+    <div class="log-filters">
+      <input
+        type="date"
+        class="filter-input"
+        id="filterDate"
+        title="Filtrar por data"
+        style="width: 150px;"
+      />
+      <select class="filter-select" id="filterType">
+        <option value="">Todos os tipos</option>
+        <option value="open">Aberto</option>
+        <option value="closed">Fechado</option>
+        <option value="warn">Alerta</option>
+        <option value="info">Info</option>
+      </select>
+      <input
+        type="text"
+        class="filter-input"
+        id="filterText"
+        placeholder="Pesquisar texto..."
+        style="flex: 1; min-width: 140px;"
+      />
+      <button class="filter-clear" onclick="clearFilters()">Limpar</button>
+    </div>
+
     <div class="log-list" id="logEntries"></div>
+
+    <div class="pagination" id="pagination"></div>
   </div>
 
   <div class="controls">
     <div class="controls-label">Simular evento</div>
     <div class="btn-grid">
-      <button class="btn btn-close" onclick="simulateEvent('close')">
-        <span class="btn-indicator"></span>
-        Fechar estreito
+      <button class="btn btn-close"      onclick="simulateEvent('close')">
+        <span class="btn-indicator"></span>Fechar estreito
       </button>
-      <button class="btn btn-open" onclick="simulateEvent('open')">
-        <span class="btn-indicator"></span>
-        Abrir estreito
+      <button class="btn btn-open"       onclick="simulateEvent('open')">
+        <span class="btn-indicator"></span>Abrir estreito
       </button>
       <button class="btn btn-suspicious" onclick="simulateEvent('suspicious')">
-        <span class="btn-indicator"></span>
-        Actividade suspeita
+        <span class="btn-indicator"></span>Actividade suspeita
       </button>
-      <button class="btn btn-negotiate" onclick="simulateEvent('negotiate')">
-        <span class="btn-indicator"></span>
-        Negociar
+      <button class="btn btn-negotiate"  onclick="simulateEvent('negotiate')">
+        <span class="btn-indicator"></span>Negociar
       </button>
     </div>
   </div>
@@ -618,17 +583,235 @@
 </footer>
 
 <script>
-  const logs = [
-    { time: "03:12", type: "warn", text: "General diz que vai 'considerar opções'. Mercados entram em pânico preventivo." },
-    { time: "04:58", type: "info", text: "Reunião de 6 horas conclui que o estreito está... igual." },
-    { time: "05:14", type: "open", text: "Estreito aberto.", tag: "ABERTO" },
-    { time: "07:30", type: "warn", text: "Porta-voz iraniano usa a palavra 'soberania' 14 vezes numa frase." },
-    { time: "09:02", type: "info", text: "EUA enviam porta-aviões. Irão diz que não está impressionado. Bolsas sobem e descem ao mesmo tempo." },
-    { time: "11:15", type: "warn", text: "Navio-tanque pede passagem. Recebe formulário em persa com 43 páginas." },
-    { time: "13:44", type: "closed", text: "Fecho temporário por 'manutenção geopolítica'.", tag: "FECHADO" },
-    { time: "14:09", type: "open", text: "Estreito reaberto após telefonema misterioso.", tag: "ABERTO" },
-  ];
+  /* ------------------------------------------------------------------ */
+  /* HELPERS                                                              */
+  /* ------------------------------------------------------------------ */
+  const LOGS_KEY = 'ormuz_logs_v1';
+  const PAGE_SIZE = 10;
+  let currentPage = 1;
 
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function nowISO() {
+    const d = new Date();
+    return d.toISOString(); // full ISO, stored internally
+  }
+
+  function formatDate(iso) {
+    const d = new Date(iso);
+    return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+  }
+
+  function formatTime(iso) {
+    const d = new Date(iso);
+    return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  }
+
+  function isoToDateInput(iso) {
+    // returns YYYY-MM-DD for <input type="date">
+    return iso.slice(0, 10);
+  }
+
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  function randTime(hMin, hMax) {
+    const h = Math.floor(Math.random() * (hMax - hMin) + hMin);
+    const m = Math.floor(Math.random() * 60);
+    return `${pad(h)}:${pad(m)}`;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* PERSISTENCE (localStorage)                                           */
+  /* Logs survive refresh. Max 200 entries stored.                        */
+  /* ------------------------------------------------------------------ */
+  function loadLogs() {
+    try {
+      const raw = localStorage.getItem(LOGS_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+  }
+
+  function saveLogs(arr) {
+    try {
+      // keep newest 200
+      const toSave = arr.slice(-200);
+      localStorage.setItem(LOGS_KEY, JSON.stringify(toSave));
+    } catch {}
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* INITIAL LOG DATA                                                     */
+  /* Spread across today and the last 2 days for demo purposes           */
+  /* ------------------------------------------------------------------ */
+  function buildSeedLogs() {
+    const now = new Date();
+    function daysAgo(n, h, m, s = 0) {
+      const d = new Date(now);
+      d.setDate(d.getDate() - n);
+      d.setHours(h, m, s, 0);
+      return d.toISOString();
+    }
+
+    return [
+      { ts: daysAgo(2, 3,12), type: "warn",   text: "General diz que vai 'considerar opções'. Mercados entram em pânico preventivo." },
+      { ts: daysAgo(2, 7,30), type: "warn",   text: "Porta-voz iraniano usa a palavra 'soberania' 14 vezes numa frase." },
+      { ts: daysAgo(2, 9, 2), type: "info",   text: "EUA enviam porta-aviões. Irão diz que não está impressionado. Bolsas sobem e descem ao mesmo tempo." },
+      { ts: daysAgo(2,11,15), type: "warn",   text: "Navio-tanque pede passagem. Recebe formulário em persa com 43 páginas." },
+      { ts: daysAgo(2,13,44), type: "closed", text: "Fecho temporário por 'manutenção geopolítica'.", tag: "FECHADO" },
+      { ts: daysAgo(2,14, 9), type: "open",   text: "Estreito reaberto após telefonema misterioso.", tag: "ABERTO" },
+      { ts: daysAgo(2,18,22), type: "info",   text: "Negociador sénior voa para Genebra. Passagem de ida." },
+      { ts: daysAgo(2,21,55), type: "warn",   text: "Tweet apagado. Demasiado honesto." },
+      { ts: daysAgo(1, 4,58), type: "info",   text: "Reunião de 6 horas conclui que o estreito está... igual." },
+      { ts: daysAgo(1, 8,10), type: "open",   text: "Estreito aberto.", tag: "ABERTO" },
+      { ts: daysAgo(1,10,33), type: "warn",   text: "Drone detectado. País de origem: a determinar pelos próximos 3 anos." },
+      { ts: daysAgo(1,12,47), type: "info",   text: "Mercados reagem nervosamente a silêncio prolongado." },
+      { ts: daysAgo(1,15,20), type: "warn",   text: "Comunicado emitido. 400 palavras. Zero informação nova." },
+      { ts: daysAgo(1,17, 5), type: "closed", text: "Estreito fechado — razão oficial: 'provocação ocidental não especificada'.", tag: "FECHADO" },
+      { ts: daysAgo(1,19,38), type: "open",   text: "Reabertura confirmada. Talvez.", tag: "ABERTO" },
+      { ts: daysAgo(1,22,14), type: "info",   text: "Porta-voz diz que a situação está 'sob controlo'. Ninguém acredita." },
+      { ts: daysAgo(0, 3,12), type: "warn",   text: "Reunião de emergência em curso. Resultado: nova reunião." },
+      { ts: daysAgo(0, 5,14), type: "open",   text: "Estreito aberto.", tag: "ABERTO" },
+      { ts: daysAgo(0, 9, 0), type: "info",   text: "Agência Reuters menciona 'tensão crescente'. Ninguém surpreendido." },
+    ];
+  }
+
+  /* load or seed */
+  let logs = loadLogs();
+  if (!logs || logs.length === 0) {
+    logs = buildSeedLogs();
+    saveLogs(logs);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* FILTER STATE                                                         */
+  /* ------------------------------------------------------------------ */
+  function getFilters() {
+    return {
+      date: document.getElementById('filterDate').value,       // YYYY-MM-DD or ""
+      type: document.getElementById('filterType').value,       // "" | open | closed | warn | info
+      text: document.getElementById('filterText').value.toLowerCase().trim(),
+    };
+  }
+
+  function applyFilters(allLogs) {
+    const { date, type, text } = getFilters();
+    return allLogs.filter(log => {
+      if (date && isoToDateInput(log.ts) !== date) return false;
+      if (type && log.type !== type) return false;
+      if (text && !log.text.toLowerCase().includes(text)) return false;
+      return true;
+    });
+  }
+
+  function clearFilters() {
+    document.getElementById('filterDate').value = '';
+    document.getElementById('filterType').value = '';
+    document.getElementById('filterText').value = '';
+    currentPage = 1;
+    renderLogs();
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* RENDER                                                               */
+  /* ------------------------------------------------------------------ */
+  const dotClass = { open: 'dot-open', closed: 'dot-closed', warn: 'dot-warn', info: 'dot-info', suspicious: 'dot-warn' };
+
+  function renderLogs() {
+    const container = document.getElementById('logEntries');
+    const filtered = applyFilters([...logs].reverse()); // newest first
+    const total    = filtered.length;
+    const pages    = Math.max(1, Math.ceil(total / PAGE_SIZE));
+
+    if (currentPage > pages) currentPage = pages;
+
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const slice = filtered.slice(start, start + PAGE_SIZE);
+
+    // count label
+    const { date, type, text } = getFilters();
+    const hasFilter = date || type || text;
+    document.getElementById('logCount').textContent = hasFilter
+      ? `${total} resultado${total !== 1 ? 's' : ''} de ${logs.length} entradas`
+      : `${total} entrada${total !== 1 ? 's' : ''}`;
+
+    // entries
+    if (slice.length === 0) {
+      container.innerHTML = '<div class="log-empty">Nenhum evento encontrado.</div>';
+    } else {
+      container.innerHTML = '';
+      slice.forEach(log => {
+        const div = document.createElement('div');
+        div.className = 'log-entry';
+        const tagHtml = log.tag
+          ? `<span class="log-tag ${log.tag === 'ABERTO' ? 'tag-open' : 'tag-closed'}">${log.tag}</span>`
+          : '';
+        div.innerHTML = `
+          <span class="log-datetime">
+            <span class="log-date">${formatDate(log.ts)}</span>
+            <span class="log-time">${formatTime(log.ts)}</span>
+          </span>
+          <span class="log-dot ${dotClass[log.type] || 'dot-info'}"></span>
+          <span class="log-text">${log.text}${tagHtml}</span>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // pagination
+    renderPagination(pages, total);
+  }
+
+  function renderPagination(pages, total) {
+    const el = document.getElementById('pagination');
+
+    if (pages <= 1) { el.innerHTML = ''; return; }
+
+    const start = (currentPage - 1) * PAGE_SIZE + 1;
+    const end   = Math.min(currentPage * PAGE_SIZE, total);
+
+    // build page number buttons (show max 5 around current)
+    let pageNums = [];
+    const delta = 2;
+    for (let i = Math.max(1, currentPage - delta); i <= Math.min(pages, currentPage + delta); i++) {
+      pageNums.push(i);
+    }
+    if (pageNums[0] > 1) pageNums = [1, '…', ...pageNums];
+    if (pageNums[pageNums.length - 1] < pages) pageNums = [...pageNums, '…', pages];
+
+    const btns = pageNums.map(p => {
+      if (p === '…') return `<span style="color:var(--text-dim);font-family:var(--font-mono);font-size:11px;padding:0 4px;">…</span>`;
+      return `<button class="page-btn ${p === currentPage ? 'active' : ''}" onclick="goToPage(${p})">${p}</button>`;
+    }).join('');
+
+    el.innerHTML = `
+      <span class="pagination-info">${start}–${end} de ${total}</span>
+      <div class="pagination-btns">
+        <button class="page-btn" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>← Ant</button>
+        ${btns}
+        <button class="page-btn" onclick="goToPage(${currentPage + 1})" ${currentPage === pages ? 'disabled' : ''}>Próx →</button>
+      </div>
+    `;
+  }
+
+  function goToPage(p) {
+    currentPage = p;
+    renderLogs();
+    document.querySelector('.log-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* FILTER LISTENERS                                                     */
+  /* ------------------------------------------------------------------ */
+  ['filterDate', 'filterType', 'filterText'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      currentPage = 1;
+      renderLogs();
+    });
+  });
+
+  /* ------------------------------------------------------------------ */
+  /* STATUS                                                               */
+  /* ------------------------------------------------------------------ */
   const funnyReasons = {
     open: [
       "Tecnicamente. Por enquanto. Não perguntes porquê.",
@@ -653,6 +836,18 @@
     ]
   };
 
+  function updateStatus(type) {
+    const banner = document.getElementById('statusBanner');
+    const label  = document.getElementById('statusLabel');
+    const reason = document.getElementById('statusReason');
+    banner.className = 'status-banner ' + type;
+    label.textContent  = type === 'open' ? 'ABERTO' : type === 'closed' ? 'FECHADO' : 'SUSPEITO';
+    reason.textContent = pick(funnyReasons[type] || funnyReasons.open);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* SIMULATE EVENTS                                                      */
+  /* ------------------------------------------------------------------ */
   const eventMessages = {
     close: [
       "Estreito fechado — razão oficial: 'provocação ocidental não especificada'.",
@@ -680,8 +875,71 @@
     ]
   };
 
-  const dotClass = { open: "dot-open", closed: "dot-closed", warn: "dot-warn", info: "dot-info", suspicious: "dot-warn" };
+  function addLog(entry) {
+    logs.push(entry);
+    saveLogs(logs);
+    // if no filters active, jump to page 1 to see new entry
+    const { date, type, text } = getFilters();
+    if (!date && !type && !text) currentPage = 1;
+    renderLogs();
+  }
 
+  function simulateEvent(type) {
+    const msg     = pick(eventMessages[type]);
+    const logType = type === 'close' ? 'closed' : type === 'open' ? 'open' : type === 'suspicious' ? 'warn' : 'info';
+    const entry   = { ts: nowISO(), type: logType, text: msg };
+
+    if (type === 'close')      { entry.tag = 'FECHADO'; updateStatus('closed'); }
+    else if (type === 'open')  { entry.tag = 'ABERTO';  updateStatus('open'); }
+    else if (type === 'suspicious') updateStatus('suspicious');
+
+    addLog(entry);
+    randomizeMetrics(type);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* METRICS                                                              */
+  /* ------------------------------------------------------------------ */
+  function randomizeMetrics(event) {
+    const ships    = parseInt(document.getElementById('shipsWaiting').textContent);
+    const threats  = parseInt(document.getElementById('threatCount').textContent);
+    const meetings = parseInt(document.getElementById('meetingCount').textContent);
+    const tweets   = parseInt(document.getElementById('tweetCount').textContent);
+
+    if (event === 'close') {
+      document.getElementById('shipsWaiting').textContent = ships + Math.floor(Math.random() * 8 + 3);
+      document.getElementById('threatCount').textContent  = threats + Math.floor(Math.random() * 3 + 1);
+      document.getElementById('meetingCount').textContent = meetings + Math.floor(Math.random() * 2 + 1);
+      document.getElementById('tweetCount').textContent   = tweets + Math.floor(Math.random() * 8 + 4);
+      const price = (94 + Math.random() * 14).toFixed(2);
+      const pct   = (Math.random() * 9 + 3).toFixed(1);
+      document.getElementById('oilPrice').textContent     = '$' + price;
+      document.getElementById('oilBadge').textContent     = '+' + pct + '%';
+      document.getElementById('oilBadge').className       = 'oil-badge up';
+    } else if (event === 'open') {
+      document.getElementById('shipsWaiting').textContent = Math.max(0, ships - Math.floor(Math.random() * 6 + 2));
+      document.getElementById('tweetCount').textContent   = tweets + Math.floor(Math.random() * 5 + 2);
+      const price = (78 + Math.random() * 10).toFixed(2);
+      const pct   = (Math.random() * 5 + 1).toFixed(1);
+      document.getElementById('oilPrice').textContent     = '$' + price;
+      document.getElementById('oilBadge').textContent     = '-' + pct + '%';
+      document.getElementById('oilBadge').className       = 'oil-badge down';
+    } else if (event === 'suspicious') {
+      document.getElementById('threatCount').textContent  = threats + Math.floor(Math.random() * 2 + 1);
+      document.getElementById('meetingCount').textContent = meetings + 1;
+    } else if (event === 'negotiate') {
+      document.getElementById('meetingCount').textContent = meetings + Math.floor(Math.random() * 3 + 2);
+      document.getElementById('tweetCount').textContent   = tweets + Math.floor(Math.random() * 10 + 6);
+    }
+
+    document.getElementById('openTime').textContent  = randTime(3, 9);
+    document.getElementById('closeTime').textContent = randTime(20, 24);
+    document.getElementById('oilNote').textContent   = pick(oilNotes);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* OIL NOTES & CLOCK                                                    */
+  /* ------------------------------------------------------------------ */
   const oilNotes = [
     "Subiu assim que o Irão bocejou",
     "Mercados reagem a respiração de diplomata",
@@ -692,117 +950,21 @@
     "Traders acordaram a suar frio às 3h",
   ];
 
-  function renderLogs() {
-    const container = document.getElementById("logEntries");
-    container.innerHTML = "";
-    [...logs].reverse().forEach(log => {
-      const div = document.createElement("div");
-      div.className = "log-entry";
-      const tagHtml = log.tag
-        ? `<span class="log-tag ${log.tag === 'ABERTO' ? 'tag-open' : 'tag-closed'}">${log.tag}</span>`
-        : "";
-      div.innerHTML = `
-        <span class="log-time">${log.time}</span>
-        <span class="log-dot ${dotClass[log.type] || 'dot-info'}"></span>
-        <span class="log-text">${log.text}${tagHtml}</span>
-      `;
-      container.appendChild(div);
-    });
-    document.getElementById("logCount").textContent = logs.length + " entradas";
-  }
+  setInterval(() => {
+    document.getElementById('oilNote').textContent = pick(oilNotes);
+  }, 7000);
 
-  function getNow() {
-    const d = new Date();
-    return d.getHours().toString().padStart(2, "0") + ":" + d.getMinutes().toString().padStart(2, "0");
-  }
-
-  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-
-  function randTime(hMin, hMax) {
-    const h = Math.floor(Math.random() * (hMax - hMin) + hMin).toString().padStart(2, "0");
-    const m = Math.floor(Math.random() * 60).toString().padStart(2, "0");
-    return h + ":" + m;
-  }
-
-  function updateStatus(type) {
-    const banner = document.getElementById("statusBanner");
-    const label = document.getElementById("statusLabel");
-    const reason = document.getElementById("statusReason");
-    banner.className = "status-banner " + type;
-    if (type === "open") label.textContent = "ABERTO";
-    else if (type === "closed") label.textContent = "FECHADO";
-    else label.textContent = "SUSPEITO";
-    reason.textContent = pick(funnyReasons[type] || funnyReasons.open);
-  }
-
-  function simulateEvent(type) {
-    const msg = pick(eventMessages[type]);
-    const logType = type === "close" ? "closed" : type === "open" ? "open" : type === "suspicious" ? "warn" : "info";
-    const entry = { time: getNow(), type: logType, text: msg };
-
-    if (type === "close") { entry.tag = "FECHADO"; updateStatus("closed"); }
-    else if (type === "open") { entry.tag = "ABERTO"; updateStatus("open"); }
-    else if (type === "suspicious") updateStatus("suspicious");
-
-    logs.push(entry);
-    renderLogs();
-    randomizeMetrics(type);
-  }
-
-  function randomizeMetrics(event) {
-    const ships = parseInt(document.getElementById("shipsWaiting").textContent);
-    const threats = parseInt(document.getElementById("threatCount").textContent);
-    const meetings = parseInt(document.getElementById("meetingCount").textContent);
-    const tweets = parseInt(document.getElementById("tweetCount").textContent);
-
-    if (event === "close") {
-      document.getElementById("shipsWaiting").textContent = ships + Math.floor(Math.random() * 8 + 3);
-      document.getElementById("threatCount").textContent = threats + Math.floor(Math.random() * 3 + 1);
-      document.getElementById("meetingCount").textContent = meetings + Math.floor(Math.random() * 2 + 1);
-      document.getElementById("tweetCount").textContent = tweets + Math.floor(Math.random() * 8 + 4);
-      const price = (94 + Math.random() * 14).toFixed(2);
-      document.getElementById("oilPrice").textContent = "$" + price;
-      const pct = (Math.random() * 9 + 3).toFixed(1);
-      document.getElementById("oilBadge").textContent = "+" + pct + "%";
-      document.getElementById("oilBadge").className = "oil-badge up";
-    } else if (event === "open") {
-      document.getElementById("shipsWaiting").textContent = Math.max(0, ships - Math.floor(Math.random() * 6 + 2));
-      document.getElementById("tweetCount").textContent = tweets + Math.floor(Math.random() * 5 + 2);
-      const price = (78 + Math.random() * 10).toFixed(2);
-      document.getElementById("oilPrice").textContent = "$" + price;
-      const pct = (Math.random() * 5 + 1).toFixed(1);
-      document.getElementById("oilBadge").textContent = "-" + pct + "%";
-      document.getElementById("oilBadge").className = "oil-badge down";
-    } else if (event === "suspicious") {
-      document.getElementById("threatCount").textContent = threats + Math.floor(Math.random() * 2 + 1);
-      document.getElementById("meetingCount").textContent = meetings + 1;
-    } else if (event === "negotiate") {
-      document.getElementById("meetingCount").textContent = meetings + Math.floor(Math.random() * 3 + 2);
-      document.getElementById("tweetCount").textContent = tweets + Math.floor(Math.random() * 10 + 6);
-    }
-
-    document.getElementById("openTime").textContent = randTime(3, 9);
-    document.getElementById("closeTime").textContent = randTime(20, 24);
-    document.getElementById("oilNote").textContent = pick(oilNotes);
-  }
-
-  // Clock
   function updateClock() {
     const now = new Date();
-    const h = now.getHours().toString().padStart(2, "0");
-    const m = now.getMinutes().toString().padStart(2, "0");
-    const s = now.getSeconds().toString().padStart(2, "0");
-    document.getElementById("clock").textContent = h + ":" + m + ":" + s;
+    document.getElementById('clock').textContent =
+      `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
   }
   setInterval(updateClock, 1000);
   updateClock();
 
-  // Rotate oil note
-  setInterval(() => {
-    document.getElementById("oilNote").textContent = pick(oilNotes);
-  }, 7000);
-
-  // Random passive events
+  /* ------------------------------------------------------------------ */
+  /* PASSIVE EVENTS (every 30s)                                           */
+  /* ------------------------------------------------------------------ */
   const passiveEvents = [
     { type: "info", text: "Agência Reuters menciona 'tensão crescente'. Ninguém surpreendido." },
     { type: "warn", text: "Porta-voz diz que a situação está 'sob controlo'. Ninguém acredita." },
@@ -816,13 +978,14 @@
 
   setInterval(() => {
     const e = pick(passiveEvents);
-    logs.push({ time: getNow(), type: e.type, text: e.text });
-    if (logs.length > 40) logs.splice(0, 1);
-    renderLogs();
-    const tc = parseInt(document.getElementById("tweetCount").textContent);
-    document.getElementById("tweetCount").textContent = tc + Math.floor(Math.random() * 2 + 1);
-  }, 25000);
+    addLog({ ts: nowISO(), type: e.type, text: e.text });
+    const tc = parseInt(document.getElementById('tweetCount').textContent);
+    document.getElementById('tweetCount').textContent = tc + Math.floor(Math.random() * 2 + 1);
+  }, 30000);
 
+  /* ------------------------------------------------------------------ */
+  /* INIT                                                                 */
+  /* ------------------------------------------------------------------ */
   renderLogs();
 </script>
 </body>
