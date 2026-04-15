@@ -1,78 +1,551 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estreito de Ormuz — Painel Operacional</title>
+  <meta name="description" content="Dashboard humorístico em tempo real sobre o estado operacional do Estreito de Ormuz. Sátira geopolítica com humor negro." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: var(--font-sans); }
-  .container { padding: 1.5rem 1rem; max-width: 700px; margin: 0 auto; }
-  .header { text-align: center; margin-bottom: 2rem; }
-  .header h1 { font-size: 22px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; }
-  .header .subtitle { font-size: 13px; color: var(--color-text-secondary); }
-  .status-banner { border-radius: var(--border-radius-lg); padding: 1.25rem; text-align: center; margin-bottom: 1.5rem; border: 0.5px solid; transition: all 0.6s ease; }
-  .status-banner.open { background: #EAF3DE; border-color: #3B6D11; }
-  .status-banner.closed { background: #FCEBEB; border-color: #A32D2D; }
-  .status-banner.suspicious { background: #FAEEDA; border-color: #854F0B; }
-  .status-label { font-size: 28px; font-weight: 500; margin-bottom: 4px; transition: all 0.4s; }
-  .status-banner.open .status-label { color: #27500A; }
-  .status-banner.closed .status-label { color: #791F1F; }
-  .status-banner.suspicious .status-label { color: #633806; }
-  .status-reason { font-size: 13px; transition: all 0.4s; }
-  .status-banner.open .status-reason { color: #3B6D11; }
-  .status-banner.closed .status-reason { color: #A32D2D; }
-  .status-banner.suspicious .status-reason { color: #854F0B; }
-  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
-  .metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.85rem; }
-  .metric-label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px; }
-  .metric-value { font-size: 18px; font-weight: 500; color: var(--color-text-primary); }
-  .metric-note { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
-  .log-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; margin-bottom: 1.5rem; }
-  .log-header { padding: 0.75rem 1rem; border-bottom: 0.5px solid var(--color-border-tertiary); font-size: 13px; font-weight: 500; color: var(--color-text-secondary); display: flex; justify-content: space-between; align-items: center; }
-  .log-entry { padding: 0.65rem 1rem; border-bottom: 0.5px solid var(--color-border-tertiary); display: flex; gap: 12px; align-items: flex-start; font-size: 13px; }
-  .log-entry:last-child { border-bottom: none; }
-  .log-time { color: var(--color-text-tertiary); min-width: 52px; font-size: 12px; font-variant-numeric: tabular-nums; padding-top: 1px; }
-  .log-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
-  .dot-open { background: #639922; }
-  .dot-closed { background: #E24B4A; }
-  .dot-warn { background: #EF9F27; }
-  .dot-info { background: #378ADD; }
-  .log-text { color: var(--color-text-primary); line-height: 1.5; }
-  .log-text .tag { font-size: 11px; padding: 1px 7px; border-radius: 99px; margin-left: 6px; font-weight: 500; }
-  .tag-open { background: #C0DD97; color: #27500A; }
-  .tag-closed { background: #F7C1C1; color: #791F1F; }
-  .tag-warn { background: #FAC775; color: #633806; }
-  .oil-ticker { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; font-size: 13px; color: var(--color-text-secondary); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
-  .oil-price { font-size: 18px; font-weight: 500; color: var(--color-text-primary); }
-  .oil-change { font-size: 12px; padding: 2px 8px; border-radius: 99px; }
-  .oil-up { background: #FCEBEB; color: #A32D2D; }
-  .oil-down { background: #EAF3DE; color: #3B6D11; }
-  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 0.5rem; }
-  .btn-row button { font-size: 12px; padding: 6px 14px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; color: var(--color-text-secondary); cursor: pointer; transition: background 0.15s; }
-  .btn-row button:hover { background: var(--color-background-secondary); }
-  .disclaimer { font-size: 11px; color: var(--color-text-tertiary); text-align: center; margin-top: 1rem; line-height: 1.5; }
-</style>
+    :root {
+      --bg: #0a0a08;
+      --bg2: #111110;
+      --bg3: #1a1a17;
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.15);
+      --text: #e8e4d8;
+      --text-muted: #7a7669;
+      --text-dim: #4a4840;
+      --green: #6fcf4a;
+      --green-bg: rgba(111,207,74,0.08);
+      --green-border: rgba(111,207,74,0.25);
+      --red: #e84040;
+      --red-bg: rgba(232,64,64,0.08);
+      --red-border: rgba(232,64,64,0.25);
+      --amber: #e8a020;
+      --amber-bg: rgba(232,160,32,0.08);
+      --amber-border: rgba(232,160,32,0.25);
+      --blue: #4090e8;
+      --blue-bg: rgba(64,144,232,0.08);
+      --accent: #e8a020;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+      --font-body: 'IBM Plex Sans', sans-serif;
+    }
 
-<div class="container">
-  <h2 class="sr-only">Dashboard humorístico do estado operacional do Estreito de Ormuz</h2>
+    html { font-size: 16px; }
 
-  <div class="header">
-    <h1>Estreito de Ormuz — Painel Operacional</h1>
-    <div class="subtitle">Actualizado em tempo real • Fuso horário: Teerão (onde ninguém dorme)</div>
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* scanline overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.03) 2px,
+        rgba(0,0,0,0.03) 4px
+      );
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+
+    /* ---- HEADER ---- */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 10;
+    }
+
+    .header-left { display: flex; align-items: center; gap: 14px; }
+
+    .logo-mark {
+      width: 36px; height: 36px;
+      border: 1px solid var(--amber);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: var(--amber);
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+    }
+
+    .header-title {
+      font-family: var(--font-display);
+      font-size: clamp(18px, 4vw, 26px);
+      letter-spacing: 0.08em;
+      color: var(--text);
+    }
+
+    .header-title span { color: var(--amber); }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .live-badge {
+      display: flex; align-items: center; gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--green);
+      letter-spacing: 0.1em;
+    }
+
+    .live-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+
+    .clock {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    /* ---- MAIN LAYOUT ---- */
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 4rem;
+    }
+
+    /* ---- STATUS BANNER ---- */
+    .status-banner {
+      border: 1px solid;
+      border-radius: 4px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      transition: background 0.5s, border-color 0.5s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .status-banner::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px; height: 100%;
+      transition: background 0.5s;
+    }
+
+    .status-banner.open { background: var(--green-bg); border-color: var(--green-border); }
+    .status-banner.open::after { background: var(--green); }
+    .status-banner.closed { background: var(--red-bg); border-color: var(--red-border); }
+    .status-banner.closed::after { background: var(--red); }
+    .status-banner.suspicious { background: var(--amber-bg); border-color: var(--amber-border); }
+    .status-banner.suspicious::after { background: var(--amber); }
+
+    .status-left { padding-left: 12px; }
+
+    .status-tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .status-label {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 8vw, 52px);
+      letter-spacing: 0.05em;
+      line-height: 1;
+      margin-bottom: 8px;
+      transition: color 0.5s;
+    }
+
+    .status-banner.open .status-label { color: var(--green); }
+    .status-banner.closed .status-label { color: var(--red); }
+    .status-banner.suspicious .status-label { color: var(--amber); }
+
+    .status-reason {
+      font-size: 13px;
+      color: var(--text-muted);
+      max-width: 420px;
+      line-height: 1.5;
+    }
+
+    .status-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+    }
+
+    .status-times {
+      text-align: right;
+    }
+
+    .time-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .time-row-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    .time-row-val {
+      font-family: var(--font-display);
+      font-size: 20px;
+      letter-spacing: 0.05em;
+      color: var(--text);
+    }
+
+    /* ---- METRICS GRID ---- */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    .metric {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1rem;
+    }
+
+    .metric-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .metric-value {
+      font-family: var(--font-display);
+      font-size: 32px;
+      letter-spacing: 0.03em;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .metric-note {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ---- OIL TICKER ---- */
+    .oil-ticker {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.85rem 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    .oil-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .oil-icon {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    .oil-price {
+      font-family: var(--font-display);
+      font-size: 28px;
+      letter-spacing: 0.05em;
+      color: var(--text);
+    }
+
+    .oil-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 2px;
+      font-weight: 500;
+    }
+
+    .oil-badge.up { background: rgba(232,64,64,0.15); color: var(--red); border: 1px solid var(--red-border); }
+    .oil-badge.down { background: rgba(111,207,74,0.12); color: var(--green); border: 1px solid var(--green-border); }
+
+    .oil-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* ---- LOG ---- */
+    .log-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    .log-count {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .log-list {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .log-entry {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid var(--border);
+      animation: fadeIn 0.4s ease;
+    }
+
+    .log-entry:last-child { border-bottom: none; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .log-time {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      min-width: 48px;
+      padding-top: 2px;
+    }
+
+    .log-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+
+    .dot-open { background: var(--green); }
+    .dot-closed { background: var(--red); }
+    .dot-warn { background: var(--amber); }
+    .dot-info { background: var(--blue); }
+
+    .log-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .log-tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 1px 7px;
+      border-radius: 2px;
+      margin-left: 8px;
+      letter-spacing: 0.08em;
+      vertical-align: middle;
+    }
+
+    .tag-open { background: rgba(111,207,74,0.12); color: var(--green); border: 1px solid var(--green-border); }
+    .tag-closed { background: rgba(232,64,64,0.12); color: var(--red); border: 1px solid var(--red-border); }
+
+    /* ---- CONTROLS ---- */
+    .controls {
+      margin-bottom: 1.5rem;
+    }
+
+    .controls-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .btn-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 8px;
+    }
+
+    .btn {
+      background: transparent;
+      border: 1px solid var(--border-strong);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      padding: 10px 14px;
+      border-radius: 3px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn:hover { background: var(--bg3); color: var(--text); border-color: var(--border-strong); }
+    .btn:active { transform: scale(0.98); }
+
+    .btn-indicator {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .btn.btn-close .btn-indicator { background: var(--red); }
+    .btn.btn-open .btn-indicator { background: var(--green); }
+    .btn.btn-suspicious .btn-indicator { background: var(--amber); }
+    .btn.btn-negotiate .btn-indicator { background: var(--blue); }
+
+    .btn.btn-close:hover { border-color: var(--red-border); color: var(--red); }
+    .btn.btn-open:hover { border-color: var(--green-border); color: var(--green); }
+    .btn.btn-suspicious:hover { border-color: var(--amber-border); color: var(--amber); }
+    .btn.btn-negotiate:hover { border-color: rgba(64,144,232,0.3); color: var(--blue); }
+
+    /* ---- FOOTER ---- */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 1rem;
+      text-align: center;
+    }
+
+    .footer-text {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      line-height: 1.8;
+      letter-spacing: 0.04em;
+    }
+
+    .footer-text a {
+      color: var(--text-muted);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 480px) {
+      .status-right { align-items: flex-start; }
+      header { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<h1 class="sr-only">Dashboard humorístico do estado operacional do Estreito de Ormuz</h1>
+
+<header>
+  <div class="header-left">
+    <div class="logo-mark">OZ</div>
+    <div>
+      <div class="header-title">ESTREITO DE <span>ORMUZ</span></div>
+    </div>
   </div>
+  <div class="header-right">
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      <span>EM DIRECTO</span>
+    </div>
+    <div class="clock" id="clock">--:--:--</div>
+  </div>
+</header>
+
+<main>
 
   <div class="status-banner open" id="statusBanner">
-    <div class="status-label" id="statusLabel">ABERTO</div>
-    <div class="status-reason" id="statusReason">Tecnicamente. Por enquanto. Não perguntes porquê.</div>
+    <div class="status-left">
+      <div class="status-tag">ESTADO OPERACIONAL ACTUAL</div>
+      <div class="status-label" id="statusLabel">ABERTO</div>
+      <div class="status-reason" id="statusReason">Tecnicamente. Por enquanto. Não perguntes porquê.</div>
+    </div>
+    <div class="status-right">
+      <div class="status-times">
+        <div class="time-row">
+          <span class="time-row-label">Abertura</span>
+          <span class="time-row-val" id="openTime">05:14</span>
+        </div>
+        <div class="time-row">
+          <span class="time-row-label">Fecho prev.</span>
+          <span class="time-row-val" id="closeTime">22:47</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="metrics">
-    <div class="metric">
-      <div class="metric-label">Hora de abertura hoje</div>
-      <div class="metric-value" id="openTime">05:14</div>
-      <div class="metric-note">Após longa reunião</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Hora de fecho prevista</div>
-      <div class="metric-value" id="closeTime">22:47</div>
-      <div class="metric-note">Sujeito a humor</div>
-    </div>
     <div class="metric">
       <div class="metric-label">Navios à espera</div>
       <div class="metric-value" id="shipsWaiting">23</div>
@@ -83,181 +556,274 @@
       <div class="metric-value" id="threatCount">7</div>
       <div class="metric-note">Nível: quarta-feira normal</div>
     </div>
+    <div class="metric">
+      <div class="metric-label">Reuniões desde ontem</div>
+      <div class="metric-value" id="meetingCount">14</div>
+      <div class="metric-note">Conclusão: nova reunião</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Tweets diplomáticos</div>
+      <div class="metric-value" id="tweetCount">31</div>
+      <div class="metric-note">Maioria sem sentido</div>
+    </div>
   </div>
 
   <div class="oil-ticker">
-    <span>Petróleo Brent (por barril)</span>
-    <div style="display:flex;align-items:center;gap:8px;">
-      <span class="oil-price" id="oilPrice">$94.30</span>
-      <span class="oil-change oil-up" id="oilChange">+4.7%</span>
+    <div class="oil-left">
+      <div class="oil-icon">BRENT / BBL</div>
+      <div class="oil-price" id="oilPrice">$94.30</div>
+      <div class="oil-badge up" id="oilBadge">+4.7%</div>
     </div>
-    <span style="font-size:12px" id="oilNote">Subiu assim que o Irão bocejou</span>
+    <div class="oil-note" id="oilNote">Subiu assim que o Irão bocejou</div>
   </div>
 
-  <div class="log-card">
-    <div class="log-header">
-      <span>Registo de eventos</span>
-      <span id="logCount" style="font-weight:400; color: var(--color-text-tertiary);">8 entradas</span>
+  <div class="log-section">
+    <div class="section-header">
+      <div class="section-title">Registo de eventos</div>
+      <div class="log-count" id="logCount">8 entradas</div>
     </div>
-    <div id="logEntries"></div>
+    <div class="log-list" id="logEntries"></div>
   </div>
 
-  <div class="btn-row">
-    <button onclick="simulateEvent('close')">Fechar estreito</button>
-    <button onclick="simulateEvent('open')">Abrir estreito</button>
-    <button onclick="simulateEvent('suspicious')">Atividade suspeita</button>
-    <button onclick="simulateEvent('negotiate')">Negociar</button>
+  <div class="controls">
+    <div class="controls-label">Simular evento</div>
+    <div class="btn-grid">
+      <button class="btn btn-close" onclick="simulateEvent('close')">
+        <span class="btn-indicator"></span>
+        Fechar estreito
+      </button>
+      <button class="btn btn-open" onclick="simulateEvent('open')">
+        <span class="btn-indicator"></span>
+        Abrir estreito
+      </button>
+      <button class="btn btn-suspicious" onclick="simulateEvent('suspicious')">
+        <span class="btn-indicator"></span>
+        Actividade suspeita
+      </button>
+      <button class="btn btn-negotiate" onclick="simulateEvent('negotiate')">
+        <span class="btn-indicator"></span>
+        Negociar
+      </button>
+    </div>
   </div>
 
-  <div class="disclaimer">
-    Este painel é fictício e humorístico. Nenhum embargo foi criado durante a produção deste dashboard.<br>
-    O autor não se responsabiliza por aumentos no preço do combustível.
+</main>
+
+<footer>
+  <div class="footer-text">
+    Este painel é ficção satírica. Nenhum embargo foi criado durante a sua produção.<br>
+    O autor não se responsabiliza por aumentos no preço do combustível, crises diplomáticas ou ansiedade existencial.<br>
+    Produzido com humor negro e uma consciência de que isto podia ser real a qualquer momento.
   </div>
-</div>
+</footer>
 
 <script>
-const logs = [
-  { time: "03:12", type: "warn", text: "General diz que vai 'considerar opções'. Mercados entram em pânico preventivo." },
-  { time: "04:58", text: "Reunião de 6 horas conclui que o estreito está... igual.", type: "info" },
-  { time: "05:14", text: "Estreito aberto", type: "open", tag: "ABERTO" },
-  { time: "07:30", text: "Porta-voz iraniano usa a palavra 'soberania' 14 vezes numa frase.", type: "warn" },
-  { time: "09:02", text: "EUA enviam porta-aviões. Irão diz que não está impressionado. Bolsas sobem e descem ao mesmo tempo.", type: "info" },
-  { time: "11:15", text: "Navio-tanque pede passagem. Recebe formulário em persa com 43 páginas.", type: "warn" },
-  { time: "13:44", text: "Fecho temporário por 'manutenção geopolítica'", type: "closed", tag: "FECHADO" },
-  { time: "14:09", text: "Estreito reaberto após telefonema misterioso", type: "open", tag: "ABERTO" },
-];
+  const logs = [
+    { time: "03:12", type: "warn", text: "General diz que vai 'considerar opções'. Mercados entram em pânico preventivo." },
+    { time: "04:58", type: "info", text: "Reunião de 6 horas conclui que o estreito está... igual." },
+    { time: "05:14", type: "open", text: "Estreito aberto.", tag: "ABERTO" },
+    { time: "07:30", type: "warn", text: "Porta-voz iraniano usa a palavra 'soberania' 14 vezes numa frase." },
+    { time: "09:02", type: "info", text: "EUA enviam porta-aviões. Irão diz que não está impressionado. Bolsas sobem e descem ao mesmo tempo." },
+    { time: "11:15", type: "warn", text: "Navio-tanque pede passagem. Recebe formulário em persa com 43 páginas." },
+    { time: "13:44", type: "closed", text: "Fecho temporário por 'manutenção geopolítica'.", tag: "FECHADO" },
+    { time: "14:09", type: "open", text: "Estreito reaberto após telefonema misterioso.", tag: "ABERTO" },
+  ];
 
-const funnyReasons = {
-  open: [
-    "Tecnicamente. Por enquanto. Não perguntes porquê.",
-    "Aberto, mas com energia de 'fecha quando eu quiser'.",
-    "Funcional. O general está a almoçar.",
-    "Passagem permitida. Sujeito a revisão a qualquer hora.",
-  ],
-  closed: [
-    "Fechado por razões que serão explicadas num discurso de 3 horas.",
-    "Em manutenção. Volte em... não sabemos.",
-    "Temporariamente encerrado. Ou permanentemente. TBD.",
-    "Fechado. O petróleo foi para outro sítio.",
-  ],
-  suspicious: [
-    "Alguém está a filmar. Situação tensa.",
-    "Drone não identificado. Toda a gente aponta dedos.",
-    "Reunião de emergência em curso. Resultado: nova reunião.",
-    "Estado: complicado. Como o relacionamento do Irão com o SWIFT.",
-  ]
-};
+  const funnyReasons = {
+    open: [
+      "Tecnicamente. Por enquanto. Não perguntes porquê.",
+      "Aberto, mas com energia de 'fecha quando eu quiser'.",
+      "Funcional. O general está a almoçar.",
+      "Passagem permitida. Sujeito a revisão a qualquer momento.",
+      "Verde. Por ora. Não confies.",
+    ],
+    closed: [
+      "Fechado por razões que serão explicadas num discurso de 3 horas.",
+      "Em manutenção. Volte em... não sabemos.",
+      "Temporariamente encerrado. Ou permanentemente. A definir.",
+      "Fechado. O petróleo foi para outro sítio.",
+      "Bloqueado. Por soberania. Outra vez.",
+    ],
+    suspicious: [
+      "Alguém está a filmar. Situação tensa.",
+      "Drone não identificado. Toda a gente aponta dedos.",
+      "Reunião de emergência em curso. Resultado: nova reunião.",
+      "Estado: complicado. Como o relacionamento do Irão com o SWIFT.",
+      "Actividade estranha detectada. Talvez seja um golfinho.",
+    ]
+  };
 
-const eventMessages = {
-  close: [
-    "Estreito fechado — razão oficial: 'provocação ocidental não especificada'",
-    "Fecho anunciado em direto. CNN em pausa de publicidade.",
-    "Estreito encerrado. Alguém em Riade engasgou-se com o café.",
-  ],
-  open: [
-    "Estreito reaberto após 'reflexão estratégica profunda'",
-    "Reabertura confirmada. Talvez.",
-    "Aberto novamente. O general achou que estava a aparecer bem.",
-  ],
-  suspicious: [
-    "Helicóptero não identificado. Tripulantes a agitar bandeiras brancas.",
-    "Submarino detectado. Todos fingem que não viram.",
-    "Ruído estranho no sonar. Provavelmente um golfinho com agenda política.",
-  ],
-  negotiate: [
-    "Negociação iniciada. Petróleo desce $2. Todos felizes por 40 minutos.",
-    "Diplomata envia e-mail com 12 anexos em PDF. Irão responde com fax.",
-    "EUA oferecem 'pacote de incentivos'. Irão pede para ver ementa completa.",
-  ]
-};
+  const eventMessages = {
+    close: [
+      "Estreito fechado — razão oficial: 'provocação ocidental não especificada'.",
+      "Fecho anunciado em directo. CNN em pausa de publicidade.",
+      "Estreito encerrado. Alguém em Riade engasgou-se com o café.",
+      "Passagem interrompida. Porta-voz a preparar discurso de 40 minutos.",
+    ],
+    open: [
+      "Estreito reaberto após 'reflexão estratégica profunda'.",
+      "Reabertura confirmada. Talvez.",
+      "Aberto novamente. O general achou que estava a aparecer bem.",
+      "Passagem restaurada. Petróleo aliviado, mas desconfiante.",
+    ],
+    suspicious: [
+      "Helicóptero não identificado. Tripulantes a agitar bandeiras brancas.",
+      "Submarino detectado. Todos fingem que não viram.",
+      "Ruído estranho no sonar. Provavelmente um golfinho com agenda política.",
+      "Navio sem bandeira detectado. Já tem 3 bandeiras diferentes.",
+    ],
+    negotiate: [
+      "Negociação iniciada. Petróleo desce $2. Todos felizes por 40 minutos.",
+      "Diplomata envia e-mail com 12 anexos em PDF. Irão responde com fax.",
+      "EUA oferecem 'pacote de incentivos'. Irão pede para ver ementa completa.",
+      "Negociador enviado. Voltará em breve com uma proposta que ninguém vai aceitar.",
+    ]
+  };
 
-const dotClass = { open: "dot-open", closed: "dot-closed", warn: "dot-warn", info: "dot-info", suspicious: "dot-warn" };
+  const dotClass = { open: "dot-open", closed: "dot-closed", warn: "dot-warn", info: "dot-info", suspicious: "dot-warn" };
 
-function renderLogs() {
-  const container = document.getElementById("logEntries");
-  container.innerHTML = "";
-  [...logs].reverse().forEach(log => {
-    const div = document.createElement("div");
-    div.className = "log-entry";
-    div.innerHTML = `
-      <span class="log-time">${log.time}</span>
-      <span class="log-dot ${dotClass[log.type] || 'dot-info'}"></span>
-      <span class="log-text">${log.text}${log.tag ? `<span class="tag ${log.tag === 'ABERTO' ? 'tag-open' : 'tag-closed'}">${log.tag}</span>` : ""}</span>
-    `;
-    container.appendChild(div);
-  });
-  document.getElementById("logCount").textContent = logs.length + " entradas";
-}
-
-function getNow() {
-  const d = new Date();
-  return d.getHours().toString().padStart(2,"0") + ":" + d.getMinutes().toString().padStart(2,"0");
-}
-
-function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-
-function updateStatus(type) {
-  const banner = document.getElementById("statusBanner");
-  const label = document.getElementById("statusLabel");
-  const reason = document.getElementById("statusReason");
-  banner.className = "status-banner " + type;
-  if (type === "open") { label.textContent = "ABERTO"; }
-  else if (type === "closed") { label.textContent = "FECHADO"; }
-  else { label.textContent = "SUSPEITO"; }
-  reason.textContent = pick(funnyReasons[type] || funnyReasons.open);
-}
-
-function simulateEvent(type) {
-  const msg = pick(eventMessages[type]);
-  const logType = type === "close" ? "closed" : type === "open" ? "open" : type === "suspicious" ? "warn" : "info";
-  const entry = { time: getNow(), type: logType, text: msg };
-  if (type === "close") { entry.tag = "FECHADO"; updateStatus("closed"); }
-  else if (type === "open") { entry.tag = "ABERTO"; updateStatus("open"); }
-  else if (type === "suspicious") updateStatus("suspicious");
-  logs.push(entry);
-  renderLogs();
-  randomizeMetrics(type);
-}
-
-function randomizeMetrics(event) {
-  const ships = parseInt(document.getElementById("shipsWaiting").textContent);
-  const threats = parseInt(document.getElementById("threatCount").textContent);
-  if (event === "close") {
-    document.getElementById("shipsWaiting").textContent = ships + Math.floor(Math.random() * 8 + 3);
-    document.getElementById("threatCount").textContent = threats + Math.floor(Math.random() * 3 + 1);
-    const price = (94 + Math.random() * 12).toFixed(2);
-    document.getElementById("oilPrice").textContent = "$" + price;
-    const pct = (Math.random() * 8 + 3).toFixed(1);
-    document.getElementById("oilChange").textContent = "+" + pct + "%";
-    document.getElementById("oilChange").className = "oil-change oil-up";
-    document.getElementById("oilNote").textContent = pick(["Petróleo entrou em hiperventilação", "Traders acordaram a suar frio", "Investidores em pânico. Novidade."]);
-  } else if (event === "open") {
-    document.getElementById("shipsWaiting").textContent = Math.max(0, ships - Math.floor(Math.random() * 5 + 2));
-    const price = (82 + Math.random() * 8).toFixed(2);
-    document.getElementById("oilPrice").textContent = "$" + price;
-    const pct = (Math.random() * 4 + 1).toFixed(1);
-    document.getElementById("oilChange").textContent = "-" + pct + "%";
-    document.getElementById("oilChange").className = "oil-change oil-down";
-    document.getElementById("oilNote").textContent = pick(["Traders respiram. Por enquanto.", "Mercado aliviado, mas desconfiante.", "Calma tensa. A pior calma."]);
-  } else {
-    document.getElementById("threatCount").textContent = threats + 1;
-  }
-  const hOpen = (Math.floor(Math.random() * 6 + 3)).toString().padStart(2,"0") + ":" + Math.floor(Math.random() * 60).toString().padStart(2,"0");
-  const hClose = (Math.floor(Math.random() * 4 + 20)).toString().padStart(2,"0") + ":" + Math.floor(Math.random() * 60).toString().padStart(2,"0");
-  document.getElementById("openTime").textContent = hOpen;
-  document.getElementById("closeTime").textContent = hClose;
-}
-
-setInterval(() => {
-  const quotes = [
+  const oilNotes = [
     "Subiu assim que o Irão bocejou",
     "Mercados reagem a respiração de diplomata",
     "Alta por 'instabilidade genérica da região'",
     "Desceu. Alguém sorriu em Teerão.",
     "Petróleo nervoso. Como sempre.",
+    "Variação inexplicável. Mercados encolhem os ombros.",
+    "Traders acordaram a suar frio às 3h",
   ];
-  document.getElementById("oilNote").textContent = pick(quotes);
-}, 7000);
 
-renderLogs();
+  function renderLogs() {
+    const container = document.getElementById("logEntries");
+    container.innerHTML = "";
+    [...logs].reverse().forEach(log => {
+      const div = document.createElement("div");
+      div.className = "log-entry";
+      const tagHtml = log.tag
+        ? `<span class="log-tag ${log.tag === 'ABERTO' ? 'tag-open' : 'tag-closed'}">${log.tag}</span>`
+        : "";
+      div.innerHTML = `
+        <span class="log-time">${log.time}</span>
+        <span class="log-dot ${dotClass[log.type] || 'dot-info'}"></span>
+        <span class="log-text">${log.text}${tagHtml}</span>
+      `;
+      container.appendChild(div);
+    });
+    document.getElementById("logCount").textContent = logs.length + " entradas";
+  }
+
+  function getNow() {
+    const d = new Date();
+    return d.getHours().toString().padStart(2, "0") + ":" + d.getMinutes().toString().padStart(2, "0");
+  }
+
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  function randTime(hMin, hMax) {
+    const h = Math.floor(Math.random() * (hMax - hMin) + hMin).toString().padStart(2, "0");
+    const m = Math.floor(Math.random() * 60).toString().padStart(2, "0");
+    return h + ":" + m;
+  }
+
+  function updateStatus(type) {
+    const banner = document.getElementById("statusBanner");
+    const label = document.getElementById("statusLabel");
+    const reason = document.getElementById("statusReason");
+    banner.className = "status-banner " + type;
+    if (type === "open") label.textContent = "ABERTO";
+    else if (type === "closed") label.textContent = "FECHADO";
+    else label.textContent = "SUSPEITO";
+    reason.textContent = pick(funnyReasons[type] || funnyReasons.open);
+  }
+
+  function simulateEvent(type) {
+    const msg = pick(eventMessages[type]);
+    const logType = type === "close" ? "closed" : type === "open" ? "open" : type === "suspicious" ? "warn" : "info";
+    const entry = { time: getNow(), type: logType, text: msg };
+
+    if (type === "close") { entry.tag = "FECHADO"; updateStatus("closed"); }
+    else if (type === "open") { entry.tag = "ABERTO"; updateStatus("open"); }
+    else if (type === "suspicious") updateStatus("suspicious");
+
+    logs.push(entry);
+    renderLogs();
+    randomizeMetrics(type);
+  }
+
+  function randomizeMetrics(event) {
+    const ships = parseInt(document.getElementById("shipsWaiting").textContent);
+    const threats = parseInt(document.getElementById("threatCount").textContent);
+    const meetings = parseInt(document.getElementById("meetingCount").textContent);
+    const tweets = parseInt(document.getElementById("tweetCount").textContent);
+
+    if (event === "close") {
+      document.getElementById("shipsWaiting").textContent = ships + Math.floor(Math.random() * 8 + 3);
+      document.getElementById("threatCount").textContent = threats + Math.floor(Math.random() * 3 + 1);
+      document.getElementById("meetingCount").textContent = meetings + Math.floor(Math.random() * 2 + 1);
+      document.getElementById("tweetCount").textContent = tweets + Math.floor(Math.random() * 8 + 4);
+      const price = (94 + Math.random() * 14).toFixed(2);
+      document.getElementById("oilPrice").textContent = "$" + price;
+      const pct = (Math.random() * 9 + 3).toFixed(1);
+      document.getElementById("oilBadge").textContent = "+" + pct + "%";
+      document.getElementById("oilBadge").className = "oil-badge up";
+    } else if (event === "open") {
+      document.getElementById("shipsWaiting").textContent = Math.max(0, ships - Math.floor(Math.random() * 6 + 2));
+      document.getElementById("tweetCount").textContent = tweets + Math.floor(Math.random() * 5 + 2);
+      const price = (78 + Math.random() * 10).toFixed(2);
+      document.getElementById("oilPrice").textContent = "$" + price;
+      const pct = (Math.random() * 5 + 1).toFixed(1);
+      document.getElementById("oilBadge").textContent = "-" + pct + "%";
+      document.getElementById("oilBadge").className = "oil-badge down";
+    } else if (event === "suspicious") {
+      document.getElementById("threatCount").textContent = threats + Math.floor(Math.random() * 2 + 1);
+      document.getElementById("meetingCount").textContent = meetings + 1;
+    } else if (event === "negotiate") {
+      document.getElementById("meetingCount").textContent = meetings + Math.floor(Math.random() * 3 + 2);
+      document.getElementById("tweetCount").textContent = tweets + Math.floor(Math.random() * 10 + 6);
+    }
+
+    document.getElementById("openTime").textContent = randTime(3, 9);
+    document.getElementById("closeTime").textContent = randTime(20, 24);
+    document.getElementById("oilNote").textContent = pick(oilNotes);
+  }
+
+  // Clock
+  function updateClock() {
+    const now = new Date();
+    const h = now.getHours().toString().padStart(2, "0");
+    const m = now.getMinutes().toString().padStart(2, "0");
+    const s = now.getSeconds().toString().padStart(2, "0");
+    document.getElementById("clock").textContent = h + ":" + m + ":" + s;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  // Rotate oil note
+  setInterval(() => {
+    document.getElementById("oilNote").textContent = pick(oilNotes);
+  }, 7000);
+
+  // Random passive events
+  const passiveEvents = [
+    { type: "info", text: "Agência Reuters menciona 'tensão crescente'. Ninguém surpreendido." },
+    { type: "warn", text: "Porta-voz diz que a situação está 'sob controlo'. Ninguém acredita." },
+    { type: "info", text: "Reunião adiada. Motivo: fuso horário incompatível." },
+    { type: "warn", text: "Drone detectado. País de origem: a determinar pelos próximos 3 anos." },
+    { type: "info", text: "Mercados reagem nervosamente a silêncio prolongado." },
+    { type: "warn", text: "Comunicado emitido. 400 palavras. Zero informação nova." },
+    { type: "info", text: "Negociador sénior voa para Genebra. Passagem de ida." },
+    { type: "warn", text: "Tweet apagado. Demasiado honesto." },
+  ];
+
+  setInterval(() => {
+    const e = pick(passiveEvents);
+    logs.push({ time: getNow(), type: e.type, text: e.text });
+    if (logs.length > 40) logs.splice(0, 1);
+    renderLogs();
+    const tc = parseInt(document.getElementById("tweetCount").textContent);
+    document.getElementById("tweetCount").textContent = tc + Math.floor(Math.random() * 2 + 1);
+  }, 25000);
+
+  renderLogs();
 </script>
+</body>
+</html>
