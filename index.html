@@ -427,7 +427,97 @@
     .btn.btn-suspicious:hover { border-color: var(--amber-border);            color: var(--amber); }
     .btn.btn-negotiate:hover  { border-color: rgba(64,144,232,0.3);           color: var(--blue); }
 
-    /* FOOTER */
+    /* TWEETS FEED */
+    .tweets-section { margin-bottom: 1.5rem; }
+
+    .tweet-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .tweet-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.85rem 1rem;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      animation: fadeIn 0.4s ease;
+      transition: border-color 0.2s;
+    }
+
+    .tweet-card:hover { border-color: var(--border-strong); }
+
+    .tweet-avatar {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-size: 14px;
+      flex-shrink: 0;
+      letter-spacing: 0.03em;
+    }
+
+    .avatar-trump      { background: rgba(232,64,64,0.15);   color: #e84040; border: 1px solid rgba(232,64,64,0.3); }
+    .avatar-khamenei   { background: rgba(111,207,74,0.1);   color: #6fcf4a; border: 1px solid rgba(111,207,74,0.25); }
+    .avatar-netanyahu  { background: rgba(64,144,232,0.12);  color: #4090e8; border: 1px solid rgba(64,144,232,0.25); }
+    .avatar-putin      { background: rgba(232,160,32,0.12);  color: #e8a020; border: 1px solid rgba(232,160,32,0.25); }
+    .avatar-xi         { background: rgba(232,64,64,0.1);    color: #e84040; border: 1px solid rgba(232,64,64,0.2); }
+    .avatar-erdogan    { background: rgba(232,160,32,0.1);   color: #e8a020; border: 1px solid rgba(232,160,32,0.2); }
+    .avatar-un         { background: rgba(64,144,232,0.1);   color: #4090e8; border: 1px solid rgba(64,144,232,0.2); }
+    .avatar-mbs        { background: rgba(111,207,74,0.08);  color: #6fcf4a; border: 1px solid rgba(111,207,74,0.2); }
+
+    .tweet-body { flex: 1; min-width: 0; }
+
+    .tweet-header {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 4px;
+      flex-wrap: wrap;
+    }
+
+    .tweet-name {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .tweet-handle {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .tweet-time {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-left: auto;
+    }
+
+    .tweet-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    .tweet-text .highlight { color: var(--amber); font-weight: 500; }
+
+    .tweet-stats {
+      display: flex;
+      gap: 14px;
+      margin-top: 8px;
+    }
+
+    .tweet-stat {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-dim);
+    }
     footer { border-top: 1px solid var(--border); padding: 1.5rem 1rem; text-align: center; }
 
     .footer-text {
@@ -553,6 +643,14 @@
     <div class="log-list" id="logEntries"></div>
 
     <div class="pagination" id="pagination"></div>
+  </div>
+
+  <div class="tweets-section">
+    <div class="section-header">
+      <div class="section-title">Reacções internacionais</div>
+      <div class="log-count" id="tweetFeedLabel">feed ao vivo</div>
+    </div>
+    <div class="tweet-feed" id="tweetFeed"></div>
   </div>
 
   <div class="controls">
@@ -980,13 +1078,265 @@
     const logType = type === 'close' ? 'closed' : type === 'open' ? 'open' : type === 'suspicious' ? 'warn' : 'info';
     const entry   = { ts: nowISO(), type: logType, text: msg };
 
-    if (type === 'close')      { entry.tag = 'FECHADO'; updateStatus('closed'); }
-    else if (type === 'open')  { entry.tag = 'ABERTO';  updateStatus('open'); }
-    else if (type === 'suspicious') updateStatus('suspicious');
+    if (type === 'close')           { entry.tag = 'FECHADO'; updateStatus('closed'); }
+    else if (type === 'open')       { entry.tag = 'ABERTO';  updateStatus('open'); }
+    else if (type === 'suspicious') { updateStatus('suspicious'); }
+    else if (type === 'negotiate')  { updateStatus('suspicious'); }
 
     addLog(entry);
     randomizeMetrics(type);
+    pushTweet(type);
   }
+
+  /* ------------------------------------------------------------------ */
+  /* TWEETS                                                               */
+  /* ------------------------------------------------------------------ */
+  const tweeters = [
+    {
+      id: 'trump',
+      name: 'Donald J. Trump',
+      handle: '@realDonaldTrump',
+      avatar: 'DT',
+      avatarClass: 'avatar-trump',
+      tweets: {
+        close: [
+          "The Strait of Hormuz is CLOSED. Very Sad! Nobody knows straits better than me, believe me. When I was President this NEVER happened. NEVER! We had the greatest strait in history. Now look at it. Disgrace!",
+          "BREAKING: Ormuz CLOSED. I told everyone this would happen. I said it loudly. The Fake News ignored me. Now the oil — the BEAUTIFUL oil — is STUCK. Incredible. Maybe the worst strait closure of all time, possibly ever.",
+          "The Iranians don't respect Sleepy leadership. They respected ME. I had the BIGGEST military, the BEST generals, the most BEAUTIFUL aircraft carriers. They didn't dare. Now look. Sad!",
+          "I could fix this in one phone call. One call, maybe two. Definitely two. I know the Supreme Leader. He knows me. We had a great relationship. Beautiful, actually. Not many people know this.",
+        ],
+        open: [
+          "Hormuz is OPEN again! Tremendous! Many people are saying it's because of me. I think they're right, frankly. Nobody opens straits like Trump. It's true. Everybody knows it.",
+          "The Strait of Hormuz — one of the great straits, maybe THE greatest — is OPEN! I made some calls. Big calls. Powerful calls. You're welcome, World. No charge. For now.",
+          "OPEN! Just like I predicted. I predicted this exactly. Check the record. I said 'it will open' and it opened. People say my predictions are the most accurate of any human being. Could be true!",
+        ],
+        suspicious: [
+          "Something VERY suspicious is happening at Hormuz. I know this area very well — tremendous water, very strategic, the best water actually. Something big is going on. WATCH!",
+          "Hearing things about Ormuz. Big things. Possibly huge. Maybe the biggest thing ever seen there. My sources are the best sources. More to come. Stay tuned!",
+        ],
+        negotiate: [
+          "Just had a PERFECT call with Iran. Maybe the most perfect call ever made. We discussed Ormuz, the oil, many things. Very productive. Iran was very respectful, as they should be. Details to follow. Maybe.",
+          "Negotiations? I don't negotiate. I WIN. But yes, we're talking. The deal will be INCREDIBLE. The greatest deal in the history of straits. Possibly the greatest deal ever made by anyone, anywhere.",
+        ],
+      }
+    },
+    {
+      id: 'khamenei',
+      name: 'Khamenei.ir',
+      handle: '@khamenei_ir',
+      avatar: 'AK',
+      avatarClass: 'avatar-khamenei',
+      tweets: {
+        close: [
+          "The closure of Ormuz is an act of Islamic sovereignty. The arrogant powers will not dictate the terms of our waters. The Great Satan's tankers are not welcome. Resistance is our path.",
+          "We do not fear sanctions. We do not fear threats. The closure of the strait is a response to decades of western arrogance. The Islamic Republic bows to no one except the Almighty.",
+          "Ormuz belongs to the Muslim world. Let the so-called 'international community' reflect on its own crimes before lecturing us on navigation rights.",
+        ],
+        open: [
+          "The reopening of Ormuz reflects the generosity of the Islamic Republic — not any concession to the enemy. Let this be clear to all arrogant powers and their allies.",
+          "The strait remains under the guardianship of the Islamic Revolution. Its current operational status is a sovereign decision. Not a favour. Not a compromise. A decision.",
+        ],
+        suspicious: [
+          "The presence of foreign vessels near our waters is a provocation. The Islamic Republic has full capability to respond to any threat. The enemy knows this.",
+          "We are aware of all movements in the region. The Revolutionary Guards are vigilant. The Great Satan's schemes will not succeed. They never have.",
+        ],
+        negotiate: [
+          "We do not negotiate under pressure. If others wish to speak, they must first lift their illegitimate sanctions and show respect for our sovereignty. Until then, there is nothing to discuss.",
+          "The Islamic Republic engages in dialogue from a position of strength, not weakness. Any talks must be on our terms. The arrogant powers must understand this reality.",
+        ],
+      }
+    },
+    {
+      id: 'netanyahu',
+      name: 'Benjamin Netanyahu',
+      handle: '@Netanyahu',
+      avatar: 'BN',
+      avatarClass: 'avatar-netanyahu',
+      tweets: {
+        close: [
+          "Israel will not tolerate Iranian aggression in Ormuz. We are monitoring the situation closely and stand ready to act. Iran must understand there will be consequences.",
+          "The closure of the Strait of Hormuz is another act of Iranian terror. The world must wake up. Israel has been saying this for years. We will not be silent.",
+          "Iran's regime is a threat to global stability. The blockade of Ormuz proves it once again. Israel stands with all free nations against this rogue behaviour.",
+        ],
+        open: [
+          "The reopening of Ormuz is a tactical move by Iran, not a sign of good faith. Israel remains vigilant. The threat has not diminished. Do not be fooled.",
+          "While others celebrate the reopening, Israel notes that the regime responsible remains unchanged. We will continue to monitor Iran's every move.",
+        ],
+        suspicious: [
+          "Israel has intelligence on suspicious activity in Ormuz. I cannot share details. But we are watching. Iran knows we are watching. That is sufficient.",
+          "Suspicious movements near Ormuz. This has Iran's fingerprints all over it. We are consulting with our allies. All options remain on the table.",
+        ],
+        negotiate: [
+          "Any negotiations with Iran that do not include the complete dismantlement of their nuclear programme are worthless. Israel will not be party to a bad deal. Never again.",
+          "We were not consulted about these talks. We are rarely consulted. And yet somehow we are always right. Think about that.",
+        ],
+      }
+    },
+    {
+      id: 'putin',
+      name: 'Vladimir Putin',
+      handle: '@KremlinRussia_E',
+      avatar: 'VP',
+      avatarClass: 'avatar-putin',
+      tweets: {
+        close: [
+          "Russia calls for restraint from all parties. We are prepared to mediate constructive dialogue. The situation in Ormuz requires calm, experienced leadership. We are available.",
+          "The closure of Ormuz reflects the failure of Western unilateralism. Russia has long warned about the consequences of ignoring sovereign rights. Nobody listened. They will now.",
+        ],
+        open: [
+          "Russia welcomes the reopening of the strait and notes that diplomatic channels — the kind we have always advocated — have proven effective once again.",
+          "The situation normalises. As Russia predicted. We are patient people.",
+        ],
+        suspicious: [
+          "Russia is monitoring the situation carefully. We urge all parties to avoid provocation. Especially certain parties whose names we will not mention. They know who they are.",
+          "Suspicious activity near Ormuz. Russia has full situational awareness. We are saying nothing further at this time. But we know everything.",
+        ],
+        negotiate: [
+          "Russia is pleased to offer its services as mediator. We have extensive experience facilitating dialogue between difficult parties. Very extensive. Results guaranteed.",
+          "Talks are underway. Russia is observing. If invited to participate, we will participate. If not invited, we will participate anyway in an advisory capacity.",
+        ],
+      }
+    },
+    {
+      id: 'xi',
+      name: 'Xi Jinping (via CGTN)',
+      handle: '@CGTNOfficial',
+      avatar: 'XI',
+      avatarClass: 'avatar-xi',
+      tweets: {
+        close: [
+          "China urges all parties to exercise maximum restraint in the Ormuz situation. Unilateral actions that disrupt global energy flows are contrary to shared prosperity. China stands ready to import oil through alternative arrangements.",
+          "The People's Republic of China calls for immediate de-escalation. As Iran's largest trading partner, China has conveyed its concerns directly. At a very competitive price.",
+        ],
+        open: [
+          "China welcomes the resumption of free navigation in Ormuz. Stable energy corridors are essential for global development. China-Iran bilateral energy cooperation continues unaffected.",
+          "The situation stabilises. China's patient diplomacy, conducted quietly and at scale, has once again contributed to regional harmony.",
+        ],
+        suspicious: [
+          "China is closely monitoring the Ormuz situation and urges all parties, particularly certain Western navies, to avoid destabilising the region with provocative deployments.",
+        ],
+        negotiate: [
+          "China supports comprehensive dialogue on the Ormuz issue. We have facilitated preliminary contacts. Results are confidential. Energy supply to China remains uninterrupted throughout.",
+          "Constructive talks are in progress. China values stability in the Strait. We have invested significantly in that stability. Very significantly.",
+        ],
+      }
+    },
+    {
+      id: 'un',
+      name: 'UN Secretary-General',
+      handle: '@UN',
+      avatar: 'UN',
+      avatarClass: 'avatar-un',
+      tweets: {
+        close: [
+          "The Secretary-General is deeply concerned about the situation in the Strait of Hormuz and calls on all parties to exercise maximum restraint. A formal letter has been drafted. Postage is pending.",
+          "The United Nations urges immediate dialogue and de-escalation. The Secretary-General remains available for consultations. He has been available for 47 years. No one has called.",
+          "STATEMENT: The UN views the current situation with grave concern. An emergency session has been scheduled. Russia and China have confirmed they will attend. And veto.",
+        ],
+        open: [
+          "The Secretary-General welcomes the reopening of Hormuz and commends all parties for their restraint. He played no role in this outcome but is deeply gratified.",
+          "The UN notes with satisfaction the normalisation of passage in the Strait. A resolution will be drafted to celebrate this outcome. It will be vetoed preventively.",
+        ],
+        suspicious: [
+          "The United Nations expresses serious concern regarding recent developments near the Strait of Hormuz. An strongly-worded letter is being prepared. It will be ignored promptly.",
+        ],
+        negotiate: [
+          "The UN stands ready to facilitate, host, sponsor, observe, document, and publish the results of any negotiations regarding Ormuz. Venue: Geneva, New York, or Vienna. Catering available.",
+          "Negotiations are a welcome development. The UN has prepared a 340-page framework document to support the process. Nobody has read it. It is very good.",
+        ],
+      }
+    },
+    {
+      id: 'mbs',
+      name: 'Mohammed bin Salman',
+      handle: '@Saudi_Gov',
+      avatar: 'MBS',
+      avatarClass: 'avatar-mbs',
+      tweets: {
+        close: [
+          "The Kingdom of Saudi Arabia is monitoring the Ormuz situation. Our oil infrastructure is fully operational via alternative routes. Price adjustments will be announced shortly.",
+          "Saudi Arabia urges de-escalation. The closure of Ormuz affects regional stability and energy markets. We have contacted our American partners. They put us on hold.",
+        ],
+        open: [
+          "Saudi Arabia welcomes the reopening of Hormuz. The Kingdom reaffirms its commitment to stable oil markets and reasonable pricing. Within reason.",
+          "Passage restored. The Kingdom notes that oil production will continue at current levels. OPEC+ will meet next week. Nothing will change.",
+        ],
+        suspicious: [
+          "Saudi Arabia is watching the situation closely. The Kingdom has considerable intelligence assets in the region. And considerable other assets. All operational.",
+        ],
+        negotiate: [
+          "Saudi Arabia supports diplomatic solutions to the Ormuz question. We have offered to host talks. Nobody accepted. We have a very nice venue. Air-conditioned.",
+          "The Kingdom observes negotiations with cautious optimism. We were not invited to participate. We find this deeply predictable.",
+        ],
+      }
+    },
+  ];
+
+  const tweetQueue = [];
+  let tweetAutoInterval = null;
+
+  function pickTweeter(type) {
+    const available = tweeters.filter(t => t.tweets[type] && t.tweets[type].length > 0);
+    return pick(available);
+  }
+
+  function makeTweetHTML(tweeter, type, ago) {
+    const text = pick(tweeter.tweets[type]);
+    const likes = Math.floor(Math.random() * 180000 + 1200).toLocaleString('pt-PT');
+    const retweets = Math.floor(Math.random() * 60000 + 400).toLocaleString('pt-PT');
+    // highlight CAPS words and key phrases
+    const formatted = text.replace(/\b([A-Z]{3,})\b/g, '<span class="highlight">$1</span>');
+    return `
+      <div class="tweet-card">
+        <div class="tweet-avatar ${tweeter.avatarClass}">${tweeter.avatar}</div>
+        <div class="tweet-body">
+          <div class="tweet-header">
+            <span class="tweet-name">${tweeter.name}</span>
+            <span class="tweet-handle">${tweeter.handle}</span>
+            <span class="tweet-time">${ago}</span>
+          </div>
+          <div class="tweet-text">${formatted}</div>
+          <div class="tweet-stats">
+            <span class="tweet-stat">♥ ${likes}</span>
+            <span class="tweet-stat">↻ ${retweets}</span>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function pushTweet(type) {
+    const tweeter = pickTweeter(type);
+    if (!tweeter) return;
+    const feed = document.getElementById('tweetFeed');
+    const div = document.createElement('div');
+    div.innerHTML = makeTweetHTML(tweeter, type, 'agora mesmo');
+    feed.insertBefore(div.firstElementChild, feed.firstChild);
+    // keep max 6 tweets visible
+    while (feed.children.length > 6) feed.removeChild(feed.lastChild);
+  }
+
+  function initTweetFeed() {
+    // seed feed with a variety of tweets on load
+    const types = ['close', 'open', 'suspicious', 'negotiate', 'close', 'open'];
+    const agoLabels = ['2m', '7m', '14m', '28m', '41m', '1h'];
+    const feed = document.getElementById('tweetFeed');
+    // pick 6 different tweeters
+    const shuffled = [...tweeters].sort(() => Math.random() - 0.5).slice(0, 6);
+    shuffled.forEach((tweeter, i) => {
+      const type = types[i];
+      if (!tweeter.tweets[type]) return;
+      const div = document.createElement('div');
+      div.innerHTML = makeTweetHTML(tweeter, type, `há ${agoLabels[i]}`);
+      feed.appendChild(div.firstElementChild);
+    });
+    // auto tweet every 45s
+    tweetAutoInterval = setInterval(() => {
+      const t = pick(['close','open','suspicious','negotiate','close','suspicious']);
+      pushTweet(t);
+    }, 45000);
+  }
+
+  initTweetFeed();
 
   /* ------------------------------------------------------------------ */
   /* METRICS                                                              */
