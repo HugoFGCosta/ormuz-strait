@@ -419,7 +419,8 @@
     .btn.btn-close      .btn-indicator { background: var(--red); }
     .btn.btn-open       .btn-indicator { background: var(--green); }
     .btn.btn-suspicious .btn-indicator { background: var(--amber); }
-    .btn.btn-negotiate  .btn-indicator { background: var(--blue); }
+    .btn.btn-reset  .btn-indicator { background: var(--text-dim); }
+    .btn.btn-reset:hover { border-color: rgba(255,255,255,0.2); color: var(--text-muted); }
 
     .btn.btn-close:hover      { border-color: var(--red-border);              color: var(--red); }
     .btn.btn-open:hover       { border-color: var(--green-border);            color: var(--green); }
@@ -568,6 +569,9 @@
       </button>
       <button class="btn btn-negotiate"  onclick="simulateEvent('negotiate')">
         <span class="btn-indicator"></span>Negociar
+      </button>
+      <button class="btn btn-reset" onclick="resetLogs()">
+        <span class="btn-indicator"></span>Limpar logs
       </button>
     </div>
   </div>
@@ -954,10 +958,18 @@
     ]
   };
 
+  function resetLogs() {
+    if (!confirm('Apagar todos os logs e recomeçar do início?')) return;
+    localStorage.removeItem(LOGS_KEY);
+    logs = buildSeedLogs();
+    saveLogs(logs);
+    currentPage = 1;
+    clearFilters();
+  }
+
   function addLog(entry) {
     logs.push(entry);
     saveLogs(logs);
-    // if no filters active, jump to page 1 to see new entry
     const { date, type, text } = getFilters();
     if (!date && !type && !text) currentPage = 1;
     renderLogs();
